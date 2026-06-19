@@ -1,0 +1,341 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { getContent } from '../../lib/content';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/login');
+}
+
+const content = getContent();
+const c = content.contact || {};
+const h = content.hero || {};
+const a = content.about || {};
+const services = content.services || [];
+---
+
+<AdminLayout title="Site Content">
+  <div class="p-6 lg:p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-white">Site Content</h1>
+      <p class="text-slate-400 text-sm mt-1">Edit the text and information shown on the home page.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-1 bg-slate-900 p-1 rounded-xl mb-8 overflow-x-auto">
+      {['contact', 'hero', 'about', 'services'].map((tab, i) => (
+        <button
+          class={`tab-btn flex-1 min-w-fit px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${i === 0 ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white'}`}
+          data-tab={tab}
+        >
+          {tab === 'contact' ? 'Contact Info' : tab === 'hero' ? 'Hero Section' : tab === 'about' ? 'About Section' : 'Services'}
+        </button>
+      ))}
+    </div>
+
+    <!-- Save status -->
+    <div id="save-status" class="hidden mb-4 px-4 py-3 rounded-xl text-sm font-medium"></div>
+
+    <!-- CONTACT TAB -->
+    <div id="tab-contact" class="tab-panel space-y-5">
+      <div class="bg-slate-800 border border-white/10 rounded-2xl p-6">
+        <h2 class="text-white font-semibold mb-5 flex items-center gap-2"><i class="fas fa-phone text-slate-400"></i> Contact Information</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="label-style">Phone (display)</label>
+            <input class="input-style" id="c-phone" value={c.phone || ''} placeholder="678-650-2983" />
+          </div>
+          <div>
+            <label class="label-style">Phone (href — with country code)</label>
+            <input class="input-style" id="c-phoneHref" value={c.phoneHref || ''} placeholder="+16786502983" />
+          </div>
+          <div>
+            <label class="label-style">Email</label>
+            <input class="input-style" id="c-email" value={c.email || ''} placeholder="cleaneshine@hotmail.com" />
+          </div>
+          <div>
+            <label class="label-style">Business Hours</label>
+            <input class="input-style" id="c-hours" value={c.hours || ''} placeholder="Mon – Sat: 8:00 AM – 6:00 PM" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="label-style">Service Area</label>
+            <input class="input-style" id="c-area" value={c.area || ''} placeholder="Georgia, USA" />
+          </div>
+        </div>
+        <button class="btn-save mt-5" data-section="contact">Save Contact Info</button>
+      </div>
+    </div>
+
+    <!-- HERO TAB -->
+    <div id="tab-hero" class="tab-panel hidden space-y-5">
+      <div class="bg-slate-800 border border-white/10 rounded-2xl p-6">
+        <h2 class="text-white font-semibold mb-5 flex items-center gap-2"><i class="fas fa-home text-slate-400"></i> Hero Section</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="label-style">Badge (small top label)</label>
+            <input class="input-style" id="h-badge" value={h.badge || ''} />
+          </div>
+          <div>
+            <label class="label-style">Eyebrow (line above headline)</label>
+            <input class="input-style" id="h-eyebrow" value={h.eyebrow || ''} />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label-style">Headline Line 1</label>
+              <input class="input-style" id="h-headline1" value={h.headline1 || ''} />
+            </div>
+            <div>
+              <label class="label-style">Headline Line 2 (colored)</label>
+              <input class="input-style" id="h-headline2" value={h.headline2 || ''} />
+            </div>
+          </div>
+          <div>
+            <label class="label-style">Subheadline</label>
+            <textarea class="input-style resize-none" id="h-subheadline" rows="2">{h.subheadline || ''}</textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label-style">Primary CTA Button</label>
+              <input class="input-style" id="h-ctaPrimary" value={h.ctaPrimary || ''} />
+            </div>
+            <div>
+              <label class="label-style">Secondary CTA Button</label>
+              <input class="input-style" id="h-ctaSecondary" value={h.ctaSecondary || ''} />
+            </div>
+          </div>
+        </div>
+        <button class="btn-save mt-5" data-section="hero">Save Hero</button>
+      </div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div id="tab-about" class="tab-panel hidden space-y-5">
+      <div class="bg-slate-800 border border-white/10 rounded-2xl p-6">
+        <h2 class="text-white font-semibold mb-5 flex items-center gap-2"><i class="fas fa-users text-slate-400"></i> About Section</h2>
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label-style">Eyebrow</label>
+              <input class="input-style" id="a-eyebrow" value={a.eyebrow || ''} />
+            </div>
+            <div>
+              <label class="label-style">CTA Button Label</label>
+              <input class="input-style" id="a-ctaLabel" value={a.ctaLabel || ''} />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="label-style">Headline Line 1</label>
+              <input class="input-style" id="a-headline1" value={a.headline1 || ''} />
+            </div>
+            <div>
+              <label class="label-style">Headline Line 2 (colored)</label>
+              <input class="input-style" id="a-headline2" value={a.headline2 || ''} />
+            </div>
+          </div>
+          <div>
+            <label class="label-style">Paragraph 1</label>
+            <textarea class="input-style resize-none" id="a-paragraph1" rows="3">{a.paragraph1 || ''}</textarea>
+          </div>
+          <div>
+            <label class="label-style">Paragraph 2</label>
+            <textarea class="input-style resize-none" id="a-paragraph2" rows="3">{a.paragraph2 || ''}</textarea>
+          </div>
+          <div>
+            <label class="label-style">Paragraph 3</label>
+            <textarea class="input-style resize-none" id="a-paragraph3" rows="3">{a.paragraph3 || ''}</textarea>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="label-style">Stat 1 Value</label>
+              <input class="input-style" id="a-stat1Value" value={a.stat1Value || ''} />
+              <label class="label-style mt-2">Stat 1 Label</label>
+              <input class="input-style" id="a-stat1Label" value={a.stat1Label || ''} />
+            </div>
+            <div>
+              <label class="label-style">Stat 2 Value</label>
+              <input class="input-style" id="a-stat2Value" value={a.stat2Value || ''} />
+              <label class="label-style mt-2">Stat 2 Label</label>
+              <input class="input-style" id="a-stat2Label" value={a.stat2Label || ''} />
+            </div>
+            <div>
+              <label class="label-style">Stat 3 Value</label>
+              <input class="input-style" id="a-stat3Value" value={a.stat3Value || ''} />
+              <label class="label-style mt-2">Stat 3 Label</label>
+              <input class="input-style" id="a-stat3Label" value={a.stat3Label || ''} />
+            </div>
+          </div>
+        </div>
+        <button class="btn-save mt-5" data-section="about">Save About</button>
+      </div>
+    </div>
+
+    <!-- SERVICES TAB -->
+    <div id="tab-services" class="tab-panel hidden space-y-5">
+      {services.map((svc: any, idx: number) => (
+        <div class="bg-slate-800 border border-white/10 rounded-2xl p-6" data-svc-idx={idx}>
+          <h2 class="text-white font-semibold mb-5 flex items-center gap-2">
+            <i class={`fas ${svc.icon} text-slate-400`}></i>
+            Service {idx + 1}
+          </h2>
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="label-style">Title</label>
+                <input class="input-style" data-field="title" value={svc.title} />
+              </div>
+              <div>
+                <label class="label-style">Icon (Font Awesome class)</label>
+                <input class="input-style" data-field="icon" value={svc.icon} />
+              </div>
+            </div>
+            <div>
+              <label class="label-style">Tagline (short)</label>
+              <input class="input-style" data-field="tagline" value={svc.tagline} />
+            </div>
+            <div>
+              <label class="label-style">Description</label>
+              <textarea class="input-style resize-none" data-field="description" rows="3">{svc.description}</textarea>
+            </div>
+            <div>
+              <label class="label-style">Highlights (one per line, 4 lines)</label>
+              <textarea class="input-style resize-none" data-field="highlights" rows="4">{svc.highlights?.join('\n') || ''}</textarea>
+            </div>
+          </div>
+        </div>
+      ))}
+      <button class="btn-save" data-section="services">Save All Services</button>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  @reference "../../styles/global.css";
+  .label-style {
+    @apply block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide;
+  }
+  .input-style {
+    @apply w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm;
+  }
+  .btn-save {
+    @apply inline-flex items-center gap-2 bg-[#0F172A] hover:bg-[#162437] text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors border border-white/10;
+  }
+</style>
+
+<script>
+  // Tabs
+  const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  const tabPanels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab!;
+      tabBtns.forEach(b => {
+        b.className = b.dataset.tab === tab
+          ? 'tab-btn flex-1 min-w-fit px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap bg-slate-700 text-white'
+          : 'tab-btn flex-1 min-w-fit px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap text-slate-400 hover:text-white';
+      });
+      tabPanels.forEach(p => {
+        p.classList.toggle('hidden', p.id !== `tab-${tab}`);
+      });
+    });
+  });
+
+  // Save status
+  const statusEl = document.getElementById('save-status') as HTMLElement;
+  function showStatus(msg: string, ok = true) {
+    statusEl.textContent = msg;
+    statusEl.className = `mb-4 px-4 py-3 rounded-xl text-sm font-medium ${ok ? 'bg-green-900/50 text-green-300 border border-green-700/50' : 'bg-red-900/50 text-red-300 border border-red-700/50'}`;
+    statusEl.classList.remove('hidden');
+    setTimeout(() => statusEl.classList.add('hidden'), 4000);
+  }
+
+  // Gather values helper
+  function val(id: string): string {
+    const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
+    return el ? el.value.trim() : '';
+  }
+
+  // Save handlers
+  document.querySelectorAll<HTMLButtonElement>('.btn-save').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const section = btn.dataset.section!;
+      let payload: Record<string, any> = {};
+
+      if (section === 'contact') {
+        payload = { contact: {
+          phone: val('c-phone'),
+          phoneHref: val('c-phoneHref'),
+          email: val('c-email'),
+          hours: val('c-hours'),
+          area: val('c-area'),
+        }};
+      } else if (section === 'hero') {
+        payload = { hero: {
+          badge: val('h-badge'),
+          eyebrow: val('h-eyebrow'),
+          headline1: val('h-headline1'),
+          headline2: val('h-headline2'),
+          subheadline: val('h-subheadline'),
+          ctaPrimary: val('h-ctaPrimary'),
+          ctaSecondary: val('h-ctaSecondary'),
+        }};
+      } else if (section === 'about') {
+        payload = { about: {
+          eyebrow: val('a-eyebrow'),
+          headline1: val('a-headline1'),
+          headline2: val('a-headline2'),
+          paragraph1: val('a-paragraph1'),
+          paragraph2: val('a-paragraph2'),
+          paragraph3: val('a-paragraph3'),
+          stat1Value: val('a-stat1Value'),
+          stat1Label: val('a-stat1Label'),
+          stat2Value: val('a-stat2Value'),
+          stat2Label: val('a-stat2Label'),
+          stat3Value: val('a-stat3Value'),
+          stat3Label: val('a-stat3Label'),
+          ctaLabel: val('a-ctaLabel'),
+        }};
+      } else if (section === 'services') {
+        const svcCards = document.querySelectorAll<HTMLElement>('[data-svc-idx]');
+        const svcs: any[] = [];
+        // Get current services from the server to preserve id/image/icon
+        const res0 = await fetch('/api/content');
+        const currentContent = await res0.json();
+        const currentSvcs = currentContent.services || [];
+
+        svcCards.forEach((card, i) => {
+          const g = (field: string) => (card.querySelector(`[data-field="${field}"]`) as HTMLInputElement | HTMLTextAreaElement)?.value.trim() || '';
+          const highlights = g('highlights').split('\n').map((s: string) => s.trim()).filter(Boolean);
+          svcs.push({
+            ...currentSvcs[i],
+            title: g('title'),
+            icon: g('icon'),
+            tagline: g('tagline'),
+            description: g('description'),
+            highlights,
+          });
+        });
+        payload = { services: svcs };
+      }
+
+      try {
+        btn.textContent = 'Saving...';
+        btn.disabled = true;
+        const res = await fetch('/api/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Save failed');
+        showStatus('Saved! Changes are live on the site.');
+      } catch {
+        showStatus('Error saving. Please try again.', false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = section === 'services' ? 'Save All Services' : `Save ${section.charAt(0).toUpperCase() + section.slice(1)}`;
+      }
+    });
+  });
+</script>

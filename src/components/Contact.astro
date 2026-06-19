@@ -1,0 +1,218 @@
+---
+import { getContent } from '../lib/content';
+const content = getContent();
+const c = content.contact || {};
+---
+
+<section id="contact" class="py-20 md:py-28 bubble-pattern-site">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-[#0F172A] font-semibold text-sm uppercase tracking-widest mb-3">Let's Get Started</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Get Your Free Estimate!</h2>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+        Fill out the form for a free estimate or send us a text message. We will reply as soon as possible.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
+      <!-- Contact form -->
+      <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+        <h3 class="text-xl font-bold text-slate-900 mb-6">Get Your Free Estimate!</h3>
+
+        <form
+          action={`https://formsubmit.co/${c.email || 'cleaneshine@hotmail.com'}`}
+          method="POST"
+          class="space-y-5"
+        >
+          <!-- Hidden fields for formsubmit.co -->
+          <input type="hidden" name="_subject" value="New cleaning estimate request from Clean & Shine site" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="text" name="_honey" class="hidden" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Full Name *</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="Your name"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+              />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-slate-700 mb-1.5">Phone Number *</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                placeholder="(678) 000-0000"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="your@email.com"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label for="serviceType" class="block text-sm font-medium text-slate-700 mb-1.5">Service Type *</label>
+            <select
+              id="serviceType"
+              name="serviceType"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 transition-colors bg-white"
+            >
+              <option value="" disabled selected>Select a service...</option>
+              <option value="Recurring Home Cleaning">Recurring Home Cleaning</option>
+              <option value="Deep Cleaning">Deep Cleaning</option>
+              <option value="Commercial Cleaning">Commercial Cleaning</option>
+              <option value="Move In/Out Cleaning">Move In/Out Cleaning</option>
+              <option value="Not sure yet">Not sure yet</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="address" class="block text-sm font-medium text-slate-700 mb-1.5">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="123 Main St, Marietta"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="zipcode" class="block text-sm font-medium text-slate-700 mb-1.5">ZIP Code</label>
+              <input
+                type="text"
+                id="zipcode"
+                name="zipcode"
+                placeholder="e.g. 30060"
+                maxlength="10"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+              />
+            </div>
+            <div>
+              <label for="city" class="block text-sm font-medium text-slate-700 mb-1.5">City</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                placeholder="e.g. Marietta"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-slate-700 mb-1.5">Additional Details</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="Tell us about your home size and requirements..."
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#0F172A] focus:ring-2 focus:ring-[#0F172A]/20 outline-none text-slate-900 placeholder-slate-400 transition-colors resize-none"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full flex items-center justify-center gap-2 bg-[#0F172A] hover:bg-[#07101e] text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-slate-200 text-base"
+          >
+            <i class="fas fa-paper-plane"></i>
+            Send My Request
+          </button>
+
+          <p class="text-xs text-slate-400 text-center">
+            We'll respond within 24 hours. Or call/text us at
+            <a href={`tel:${c.phoneHref || '+16786502983'}`} class="text-[#0F172A] hover:underline font-medium">{c.phone}</a>
+            for a faster response.
+          </p>
+        </form>
+      </div>
+
+      <!-- Contact info sidebar -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <h3 class="font-bold text-slate-900 mb-5">Contact Information</h3>
+
+          <div class="space-y-4">
+            <a href={`tel:${c.phoneHref || '+16786502983'}`} class="flex items-start gap-4 group">
+              <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F172A]/5 text-[#0F172A] shrink-0 group-hover:bg-[#0F172A]/10 transition-colors">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-0.5">Call or Text</p>
+                <p class="font-semibold text-slate-900 group-hover:text-[#0F172A] transition-colors">{c.phone}</p>
+              </div>
+            </a>
+
+            <a href={`mailto:${c.email || ''}`} class="flex items-start gap-4 group">
+              <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F172A]/5 text-[#0F172A] shrink-0 group-hover:bg-[#0F172A]/10 transition-colors">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-0.5">Email</p>
+                <p class="font-semibold text-slate-900 group-hover:text-[#0F172A] transition-colors text-sm">{c.email}</p>
+              </div>
+            </a>
+
+            <div class="flex items-start gap-4">
+              <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F172A]/5 text-[#0F172A] shrink-0">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-0.5">Business Hours</p>
+                <p class="font-semibold text-slate-900">{c.hours}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F172A]/5 text-[#0F172A] shrink-0">
+                <i class="fas fa-location-dot"></i>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-0.5">Service Area</p>
+                <p class="font-semibold text-slate-900">{c.area}</p>
+                <p class="text-sm text-slate-500 mt-0.5">Multiple cities & neighborhoods</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="bg-[#0F172A]/5 rounded-2xl border border-[#0F172A]/10 p-6">
+          <h3 class="font-bold text-slate-900 mb-4">Why Choose Us?</h3>
+          <ul class="space-y-3">
+            {[
+              { icon: 'fa-shield-halved', text: 'Fully bonded and insured' },
+              { icon: 'fa-user-check', text: 'Background-checked team' },
+              { icon: 'fa-leaf', text: 'Eco-friendly products available' },
+              { icon: 'fa-redo', text: "Satisfaction guaranteed or re-clean free" },
+              { icon: 'fa-star', text: '5-star rated on Google' },
+            ].map(item => (
+              <li class="flex items-center gap-3 text-sm text-slate-700">
+                <i class={`fas ${item.icon} text-[#0F172A] w-4 text-center`}></i>
+                {item.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

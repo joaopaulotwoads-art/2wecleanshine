@@ -1,0 +1,98 @@
+---
+const categories = [
+  {
+    title: 'Kitchen',
+    icon: 'fa-utensils',
+    items: [
+      'Countertops wiped and sanitized',
+      'Stovetop and burners cleaned',
+      'Microwave interior and exterior',
+      'Sink scrubbed and disinfected',
+      'Cabinet fronts wiped down',
+      'Appliance exteriors cleaned',
+      'Trash removed and bin wiped',
+      'Floor swept and mopped',
+    ],
+  },
+  {
+    title: 'Bathrooms',
+    icon: 'fa-shower',
+    items: [
+      'Toilet cleaned and disinfected',
+      'Sink and faucet scrubbed',
+      'Shower and tub scrubbed',
+      'Mirror cleaned streak-free',
+      'Countertops wiped down',
+      'Cabinet fronts wiped',
+      'Floor swept and mopped',
+      'Trash removed',
+    ],
+  },
+  {
+    title: 'Bedrooms & Living Areas',
+    icon: 'fa-couch',
+    items: [
+      'Dusting all surfaces',
+      'Vacuuming carpets and rugs',
+      'Mopping hard floors',
+      'Bed made (linens changed if provided)',
+      'Mirrors wiped clean',
+      'Light switches and door handles',
+      'Baseboards dusted',
+      'Trash removed',
+    ],
+  },
+  {
+    title: 'General & Additional',
+    icon: 'fa-star',
+    items: [
+      'Cobweb removal',
+      'Windowsills wiped',
+      'Ceiling fans dusted',
+      'Light fixtures dusted',
+      'Blinds wiped down',
+      'Sliding door tracks cleaned',
+      'Laundry room surfaces wiped',
+      'Entryway swept and mopped',
+    ],
+  },
+];
+---
+
+<section id="checklist" class="py-20 md:py-28 bubble-pattern-site">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-[#0F172A] font-semibold text-sm uppercase tracking-widest mb-3">Transparency First</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">What's Included in Our Cleaning</h2>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+        We follow a thorough checklist on every visit so you always know what to expect.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {categories.map(cat => (
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F172A]/5 text-[#0F172A]">
+              <i class={`fas ${cat.icon}`}></i>
+            </div>
+            <h3 class="font-bold text-slate-900">{cat.title}</h3>
+          </div>
+          <ul class="space-y-2">
+            {cat.items.map(item => (
+              <li class="flex items-start gap-2 text-sm text-slate-600">
+                <i class="fas fa-check text-[#0F172A] mt-0.5 shrink-0 text-xs"></i>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Note -->
+    <p class="text-center text-sm text-slate-400 mt-8">
+      Deep cleaning and move in/out services include additional tasks such as inside appliances, cabinets, and hard-to-reach areas.
+    </p>
+  </div>
+</section>

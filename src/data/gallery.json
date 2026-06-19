@@ -1,0 +1,14 @@
+[
+  { "id": "g001", "src": "/images/gallery/gallery-open-living-kitchen.png", "label": "Open living & kitchen", "caption": "Clean open-concept living room and kitchen after professional cleaning." },
+  { "id": "g002", "src": "/images/gallery/gallery-living-showcase.png", "label": "Living room showcase", "caption": "Bright, organized spaces clients love coming home to." },
+{ "id": "g005", "src": "/images/gallery/gallery-bathtub.png", "label": "Bathtub renewal", "caption": "Chrome and glass restored to a clear, reflective shine." },
+  { "id": "g006", "src": "/images/gallery/gallery-shower-floor.png", "label": "Shower floor refresh", "caption": "Shower floor scrubbed and sanitized from grime to spotless." },
+  { "id": "g007", "src": "/images/gallery/gallery-ceiling-fan.png", "label": "Ceiling fan detail", "caption": "Before and after: ceiling fan blades from heavy dust to clean white." },
+  { "id": "g008", "src": "/images/gallery/gallery-baseboards.png", "label": "Baseboards & edges", "caption": "Before and after: baseboard top edge from dusty grime to clean white." },
+  { "id": "g009", "src": "/images/gallery/gallery-faucet.png", "label": "Faucet & fixtures", "caption": "Faucets polished to a streak-free, chrome shine." },
+  { "id": "g010", "src": "/images/gallery/gallery-light-fixture.png", "label": "Light fixture clarity", "caption": "Light fixtures cleaned inside and out for clearer, warmer light." },
+  { "id": "g011", "src": "/images/gallery/gallery-toaster.png", "label": "Small appliance deep clean", "caption": "Before and after: toaster interior from grease and crumbs to spotless." },
+  { "id": "g012", "src": "/images/gallery/gallery-oven.png", "label": "Oven door shine", "caption": "Burnt-on grease cleared so you can see what is cooking." },
+  { "id": "g013", "src": "/images/gallery/gallery-details-matter.png", "label": "Details matter", "caption": "Bathroom and living finishes that show we care about the little things." },
+  { "id": "g014", "src": "/images/gallery/gallery-client-spotlight.png", "label": "Client spotlight", "caption": "Vacuum lines, finishing touches, and a five-star Google review." }
+]

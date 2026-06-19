@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Clean & Shine Services | Professional Cleaning in Georgia',
+  description = 'Professional, insured, and detail-oriented cleaning services designed for consistent, high-quality results in Georgia.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="bubble-pattern-site min-h-full scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/Logo-fundo-tt.png" />
+    <link rel="preload" href="/images/hero-background.webp" as="image" type="image/webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://wecleanshine.com/#localbusiness",
+        "name": "Clean & Shine Cleaning Services in Georgia",
+        "image": "https://wecleanshine.com/images/logo-horizontal.png",
+        "url": "https://wecleanshine.com",
+        "telephone": "+1-678-650-2983",
+        "email": "cleaneshine@hotmail.com",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "GA",
+          "addressCountry": "US"
+        },
+        "areaServed": {
+          "@type": "State",
+          "name": "Georgia"
+        }
+      }
+    </script>
+  </head>
+  <body class="min-h-full bg-transparent text-slate-900 antialiased">
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,311 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { getPhotos } from '../../lib/gallery';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/login');
+}
+
+const photos = getPhotos();
+---
+
+<AdminLayout title="Gallery Management">
+  <div class="p-6 lg:p-8 max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-white">Gallery</h1>
+      <p class="text-slate-400 text-sm mt-1">{photos.length} photos · displayed on the home page</p>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="bg-slate-800 border border-white/10 rounded-2xl p-6 mb-8">
+      <h2 class="text-white font-semibold mb-5 flex items-center gap-2">
+        <i class="fas fa-plus-circle text-slate-400"></i>
+        Add Photo
+      </h2>
+
+      <!-- Drop area -->
+      <div
+        id="drop-zone"
+        class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer transition-colors hover:border-white/40 hover:bg-white/5 mb-5"
+      >
+        <i class="fas fa-cloud-upload-alt text-3xl text-slate-500 mb-3 block"></i>
+        <p class="text-slate-300 font-medium text-sm">Drag & drop an image here</p>
+        <p class="text-slate-500 text-xs mt-1 mb-3">or click to browse</p>
+        <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,.gif,.avif" class="hidden" />
+        <label for="file-input" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium px-4 py-2 rounded-lg cursor-pointer transition-colors">
+          <i class="fas fa-folder-open"></i> Browse
+        </label>
+      </div>
+
+      <!-- Preview -->
+      <div id="preview-wrap" class="hidden mb-5">
+        <div class="flex items-start gap-4 bg-slate-900 rounded-xl p-4 border border-white/10">
+          <img id="preview-img" src="" alt="" class="w-24 h-24 rounded-lg object-cover flex-shrink-0" />
+          <div class="flex-1 min-w-0">
+            <p id="preview-name" class="text-white text-sm font-medium truncate"></p>
+            <p id="preview-size" class="text-slate-400 text-xs mt-0.5"></p>
+            <button id="btn-clear" class="mt-2 text-xs text-red-400 hover:text-red-300 transition-colors">
+              <i class="fas fa-times mr-1"></i>Remove
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Label & Caption -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+        <div>
+          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Label <span class="text-red-400">*</span></label>
+          <input
+            id="input-label"
+            type="text"
+            placeholder="e.g. Bathroom — Before"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Caption <span class="text-slate-600 font-normal normal-case">(optional)</span></label>
+          <input
+            id="input-caption"
+            type="text"
+            placeholder="Short description shown on hover"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+          />
+        </div>
+      </div>
+
+      <button
+        id="btn-add"
+        class="inline-flex items-center gap-2 bg-white text-slate-900 font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <i class="fas fa-plus"></i>
+        Add Photo
+      </button>
+    </div>
+
+    <!-- Photos list -->
+    <div>
+      <h2 class="text-white font-semibold mb-4 flex items-center gap-2">
+        <i class="fas fa-images text-slate-400"></i>
+        Current Photos
+      </h2>
+
+      <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {photos.map((photo, i) => (
+          <div class="photo-card bg-slate-800 rounded-2xl overflow-hidden border border-white/10 flex flex-col" data-id={photo.id}>
+            <!-- Image -->
+            <div class="relative" style="aspect-ratio:4/3;">
+              <span class="absolute top-2 left-2 z-10 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md">{i + 1}</span>
+              <img
+                src={photo.src}
+                alt={photo.label}
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden')"
+              />
+              <div class="hidden absolute inset-0 flex items-center justify-center bg-slate-900">
+                <i class="fas fa-image text-2xl text-slate-600"></i>
+              </div>
+            </div>
+            <!-- Info + delete -->
+            <div class="p-3 flex items-start gap-2 flex-1">
+              <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-semibold truncate" title={photo.label}>{photo.label}</p>
+                {photo.caption && (
+                  <p class="text-slate-400 text-xs truncate mt-0.5" title={photo.caption}>{photo.caption}</p>
+                )}
+              </div>
+              <button
+                class="btn-delete flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
+                data-id={photo.id}
+                data-label={photo.label}
+                title="Delete photo"
+              >
+                <i class="fas fa-trash text-xs"></i>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {photos.length === 0 && (
+        <div class="text-center py-20 text-slate-500">
+          <i class="fas fa-images text-4xl mb-3 block"></i>
+          <p>No photos yet. Add your first photo above.</p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+    <div id="toast-inner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium text-white min-w-48">
+      <i id="toast-icon" class="fas"></i>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  // ── Toast ──────────────────────────────────────────────
+  const toast = document.getElementById('toast')!;
+  const toastInner = document.getElementById('toast-inner')!;
+  const toastMsg = document.getElementById('toast-msg')!;
+  const toastIcon = document.getElementById('toast-icon')!;
+  let toastTimer: ReturnType<typeof setTimeout>;
+
+  function showToast(msg: string, isError = false) {
+    clearTimeout(toastTimer);
+    toastMsg.textContent = msg;
+    toastIcon.className = `fas ${isError ? 'fa-circle-xmark' : 'fa-circle-check'}`;
+    toastInner.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium text-white min-w-48 ${isError ? 'bg-red-600' : 'bg-green-600'}`;
+    toast.classList.remove('hidden');
+    toastTimer = setTimeout(() => toast.classList.add('hidden'), 4000);
+  }
+
+  // ── File input & drop zone ──────────────────────────────
+  const dropZone = document.getElementById('drop-zone') as HTMLElement;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const previewWrap = document.getElementById('preview-wrap') as HTMLElement;
+  const previewImg = document.getElementById('preview-img') as HTMLImageElement;
+  const previewName = document.getElementById('preview-name') as HTMLElement;
+  const previewSize = document.getElementById('preview-size') as HTMLElement;
+  const btnClear = document.getElementById('btn-clear') as HTMLButtonElement;
+
+  function formatBytes(bytes: number) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  function setFile(file: File) {
+    fileInput._file = file;
+    previewName.textContent = file.name;
+    previewSize.textContent = formatBytes(file.size);
+    previewImg.src = URL.createObjectURL(file);
+    previewWrap.classList.remove('hidden');
+    dropZone.classList.add('border-green-500/50');
+  }
+
+  function clearFile() {
+    fileInput.value = '';
+    (fileInput as any)._file = null;
+    previewWrap.classList.add('hidden');
+    previewImg.src = '';
+    dropZone.classList.remove('border-green-500/50');
+  }
+
+  dropZone.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('label')) return;
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (file) setFile(file);
+  });
+
+  btnClear.addEventListener('click', clearFile);
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-white/60', 'bg-white/5');
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-white/60', 'bg-white/5');
+  });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-white/60', 'bg-white/5');
+    const file = e.dataTransfer?.files[0];
+    if (file && file.type.startsWith('image/')) setFile(file);
+  });
+
+  // ── Add photo ───────────────────────────────────────────
+  const btnAdd = document.getElementById('btn-add') as HTMLButtonElement;
+  const inputLabel = document.getElementById('input-label') as HTMLInputElement;
+  const inputCaption = document.getElementById('input-caption') as HTMLInputElement;
+  const photosGrid = document.getElementById('photos-grid') as HTMLElement;
+
+  btnAdd.addEventListener('click', async () => {
+    const file: File | null = (fileInput as any)._file ?? fileInput.files?.[0] ?? null;
+    const label = inputLabel.value.trim();
+    const caption = inputCaption.value.trim();
+
+    if (!file) { showToast('Please choose an image file.', true); return; }
+    if (!label) { showToast('Label is required.', true); return; }
+
+    btnAdd.disabled = true;
+    btnAdd.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…';
+
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const uploadRes = await fetch('/api/gallery/upload', { method: 'POST', body: fd });
+      if (!uploadRes.ok) throw new Error('Upload failed');
+      const { url } = await uploadRes.json();
+
+      const addRes = await fetch('/api/gallery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ src: url, label, caption }),
+      });
+      if (!addRes.ok) throw new Error('Failed to save photo entry');
+      const newPhoto = await addRes.json();
+
+      const count = photosGrid.querySelectorAll('.photo-card').length + 1;
+      const card = document.createElement('div');
+      card.className = 'photo-card bg-slate-800 rounded-2xl overflow-hidden border border-white/10 flex flex-col';
+      card.dataset.id = newPhoto.id;
+      card.innerHTML = `
+        <div class="relative" style="aspect-ratio:4/3;">
+          <span class="absolute top-2 left-2 z-10 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md">${count}</span>
+          <img src="${url}" alt="${label}" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-3 flex items-start gap-2 flex-1">
+          <div class="flex-1 min-w-0">
+            <p class="text-white text-xs font-semibold truncate" title="${label}">${label}</p>
+            ${caption ? `<p class="text-slate-400 text-xs truncate mt-0.5" title="${caption}">${caption}</p>` : ''}
+          </div>
+          <button
+            class="btn-delete flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
+            data-id="${newPhoto.id}" data-label="${label}" title="Delete photo"
+          >
+            <i class="fas fa-trash text-xs"></i>
+          </button>
+        </div>`;
+      photosGrid.appendChild(card);
+      attachDelete(card.querySelector('.btn-delete') as HTMLButtonElement);
+
+      clearFile();
+      inputLabel.value = '';
+      inputCaption.value = '';
+      showToast('Photo added!');
+    } catch (err: any) {
+      showToast(err.message || 'Error adding photo.', true);
+    } finally {
+      btnAdd.disabled = false;
+      btnAdd.innerHTML = '<i class="fas fa-plus"></i> Add Photo';
+    }
+  });
+
+  // ── Delete ──────────────────────────────────────────────
+  function attachDelete(btn: HTMLButtonElement) {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id!;
+      const label = btn.dataset.label || 'this photo';
+      if (!confirm(`Delete "${label}"?`)) return;
+      const res = await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        btn.closest('.photo-card')?.remove();
+        showToast('Photo deleted.');
+      } else {
+        showToast('Failed to delete photo.', true);
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.btn-delete').forEach(attachDelete);
+</script>

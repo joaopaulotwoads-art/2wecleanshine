@@ -1,0 +1,40 @@
+---
+export const prerender = false;
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import Checklist from '../components/Checklist.astro';
+import Gallery from '../components/Gallery.astro';
+import Reviews from '../components/Reviews.astro';
+import About from '../components/About.astro';
+import FAQ from '../components/FAQ.astro';
+import Contact from '../components/Contact.astro';
+import Map from '../components/Map.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <Header />
+  <main class="pt-16 md:pt-20">
+    <Hero />
+    <Services />
+    <Checklist />
+    <Gallery />
+    <Reviews />
+    <About />
+    <FAQ />
+    <Contact />
+    <Map />
+  </main>
+  <Footer />
+
+  <!-- Floating call button on mobile -->
+  <a
+    href="tel:+16786502983"
+    class="fixed bottom-6 right-6 z-40 sm:hidden flex items-center justify-center w-14 h-14 bg-[#0F172A] hover:bg-[#07101e] text-white rounded-full shadow-lg shadow-[#0F172A]/40 transition-colors"
+    aria-label="Call us"
+  >
+    <i class="fas fa-phone text-xl"></i>
+  </a>
+</Layout>

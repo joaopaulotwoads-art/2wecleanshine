@@ -1,0 +1,164 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getPhotos } from '../../lib/gallery';
+import { getContent } from '../../lib/content';
+
+const photos = getPhotos();
+const content = getContent();
+const phone = content.contact?.phone || '—';
+const email = content.contact?.email || '—';
+---
+
+<AdminLayout title="Dashboard">
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } }
+
+  .stat-card {
+    background: rgba(15,23,42,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: rgba(255,255,255,0.1); }
+
+  .stat-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .stat-icon.blue  { background: rgba(15,23,42,0.4); color: #94a3b8; }
+  .stat-icon.green { background: rgba(34,197,94,0.12); color: #4ade80; }
+
+  .stat-val { font-size: 1.875rem; font-weight: 700; color: #f1f5f9; line-height: 1; }
+  .stat-lbl { font-size: 0.75rem; color: #64748b; margin-top: 0.25rem; }
+
+  .section-card {
+    background: rgba(15,23,42,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .section-head h3 { font-size: 0.875rem; font-weight: 600; color: #cbd5e1; }
+
+  .actions-grid {
+    display: flex; flex-wrap: wrap; gap: 0.625rem;
+    padding: 1.25rem;
+  }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem; font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .action-btn.primary { background: #0F172A; color: white; border: 1px solid rgba(255,255,255,0.1); }
+  .action-btn.secondary { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.07); }
+
+  .info-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.82rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row i { width: 16px; text-align: center; color: #475569; flex-shrink: 0; }
+  .info-row span { color: #94a3b8; }
+
+  .welcome-card {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .welcome-card h2 { font-size: 1rem; font-weight: 700; color: #f1f5f9; margin-bottom: 0.2rem; }
+  .welcome-card p { font-size: 0.78rem; color: #64748b; }
+</style>
+
+  <!-- Welcome -->
+  <div class="welcome-card">
+    <div>
+      <h2>Welcome back!</h2>
+      <p>Manage your gallery photos and site content from here.</p>
+    </div>
+    <i class="fas fa-broom" style="font-size:1.5rem;color:#475569;flex-shrink:0"></i>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-images"></i></div>
+      <div>
+        <div class="stat-val">{photos.length}</div>
+        <div class="stat-lbl">Gallery Photos</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-circle-check"></i></div>
+      <div>
+        <div class="stat-val">Live</div>
+        <div class="stat-lbl">Site Status</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="section-card">
+    <div class="section-head">
+      <h3>Quick Actions</h3>
+    </div>
+    <div class="actions-grid">
+      <a href="/admin/gallery" class="action-btn primary">
+        <i class="fas fa-images"></i> Manage Gallery
+      </a>
+      <a href="/admin/content" class="action-btn primary">
+        <i class="fas fa-pen-to-square"></i> Edit Content
+      </a>
+      <a href="/" target="_blank" class="action-btn secondary">
+        <i class="fas fa-arrow-up-right-from-square"></i> View Site
+      </a>
+    </div>
+  </div>
+
+  <!-- Contact info snapshot -->
+  <div class="section-card">
+    <div class="section-head">
+      <h3>Contact Info (current)</h3>
+    </div>
+    <div class="info-row">
+      <i class="fas fa-phone"></i>
+      <span>{phone}</span>
+    </div>
+    <div class="info-row">
+      <i class="fas fa-envelope"></i>
+      <span>{email}</span>
+    </div>
+    <div class="info-row">
+      <i class="fas fa-clock"></i>
+      <span>{content.contact?.hours || '—'}</span>
+    </div>
+    <div class="info-row">
+      <i class="fas fa-location-dot"></i>
+      <span>{content.contact?.area || '—'}</span>
+    </div>
+  </div>
+
+</AdminLayout>

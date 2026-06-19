@@ -1,0 +1,318 @@
+---
+const reviews = [
+  {
+    id: 1,
+    name: 'Lorena Kelly',
+    location: 'Marietta, Georgia',
+    text: 'I am truly impressed with the service from Clean and Shine! They arrived exactly on time and showed impeccable professionalism from start to finish. Not only did they make my house spotless, but they also took great care with every detail.',
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: 'Luciano Maciel Bassan',
+    location: 'Georgia',
+    text: "I'm extremely satisfied with the service. The cleaning was thorough, well-organized, and exceeded my expectations. Very trustworthy and professional.",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: 'Jheniffer Thais',
+    location: 'Georgia',
+    text: "I'm always happy with their work. I know if I got a big event happening at our house and we need it clean, like clean clean, I call Bruna and I know it'll be taken care of. Can not recommend enough.",
+    rating: 5,
+  },
+  {
+    id: 4,
+    name: 'Cpl Willi',
+    location: 'Georgia',
+    text: 'I was looking for a company for recurring cleaning services, and the experience turned out to be even better than I imagined. The service is always thorough, and the house smells wonderful! They exceeded my expectations.',
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: 'Lucas Bonfim',
+    location: 'Georgia',
+    text: 'Great experience from start to finish! The team was friendly, professional, and paid attention to every detail. My place looks amazing, and I felt completely comfortable having them in my home. Highly recommend!',
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: 'Kelly Sobrinho',
+    location: 'Georgia',
+    text: 'Bruna and her team is friendly, respectful of our space and always does a great job! She has been helping with keeping our premises clean for almost a year now and will definitely recommend. It is the little details that matter. The house looks great and our place smells clean.',
+    rating: 5,
+  },
+  {
+    id: 7,
+    name: 'S V',
+    location: 'Georgia',
+    text: "We have had a wonderful experience with this cleaning service! The team is super friendly, and we especially love their attention to detail, right down to the perfect vacuum lines and the cute paper towel decorations. They consistently go above and beyond, and we couldn't be happier with their work.",
+    rating: 5,
+  },
+  {
+    id: 8,
+    name: 'Kevin Moye',
+    location: 'Georgia',
+    text: 'We use this service every week and have for over a year now. They are great. Almost always on time every week and if not they communicate letting us know. Very affordable too. Recommend!',
+    rating: 5,
+  },
+  {
+    id: 9,
+    name: 'David Linton',
+    location: 'Georgia',
+    text: 'Great Service. They always tell us if or when they might be late. always good to know. they do a great job too.',
+    rating: 5,
+  },
+  {
+    id: 10,
+    name: 'IT Support',
+    location: 'Georgia',
+    text: 'Fantastic Company! Very good communication and timely service. Highly recommend.',
+    rating: 5,
+  },
+  {
+    id: 11,
+    name: 'A punctual reviewer',
+    location: 'Georgia',
+    text: 'A punctual and reliable team. We highly recommend their work.',
+    rating: 5,
+  },
+];
+---
+
+<section class="py-20 md:py-28 bubble-pattern-site overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <p class="text-[#0F172A] font-semibold text-sm uppercase tracking-widest mb-3">Client Reviews</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto mb-8">
+        Real feedback from recent Google reviews by Clean &amp; Shine clients in Georgia.
+      </p>
+
+      <!-- Rating badges -->
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="https://www.google.com/maps/place/Clean+%26+Shine+Cleaning+Services+in+Georgia/@33.9426817,-84.5408434,12z/data=!4m8!3m7!1s0xfc07b900df399b5:0x8332a40cfad6bbfa!8m2!3d33.931573!4d-84.54256!9m1!1b1!16s%2Fg%2F11n9cmv6w_?entry=ttu&g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 bg-white border border-slate-200 hover:border-[#0F172A]/30 hover:shadow-md rounded-2xl px-5 py-3.5 transition-all duration-200 group"
+        >
+          <img
+            src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png"
+            alt="Google"
+            class="w-7 h-7 object-contain"
+          />
+          <div class="text-left">
+            <div class="flex items-center gap-1 mb-0.5">
+              {Array.from({ length: 5 }).map(() => (
+                <i class="fas fa-star text-yellow-400 text-sm"></i>
+              ))}
+            </div>
+            <p class="text-xs font-semibold text-slate-700 leading-none">Google 5 Stars</p>
+          </div>
+          <i class="fas fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-[#0F172A] transition-colors ml-1"></i>
+        </a>
+
+        <a
+          href="https://www.thumbtack.com/profile/services/550455567652438028/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 bg-white border border-slate-200 hover:border-[#0F172A]/30 hover:shadow-md rounded-2xl px-5 py-3.5 transition-all duration-200 group"
+        >
+          <svg class="w-7 h-7 shrink-0" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Thumbtack">
+            <circle cx="16" cy="16" r="16" fill="#009FD9"/>
+            <path d="M22.5 9.5H9.5C9.22 9.5 9 9.72 9 10v2c0 .28.22.5.5.5h1.09l2.16 7H12.5c-.28 0-.5.22-.5.5v1c0 .28.22.5.5.5H16v2.5c0 .28.22.5.5.5s.5-.22.5-.5V21.5h3.5c.28 0 .5-.22.5-.5v-1c0-.28-.22-.5-.5-.5h-.75l2.16-7H22.5c.28 0 .5-.22.5-.5v-2c0-.28-.22-.5-.5-.5z" fill="white"/>
+          </svg>
+          <div class="text-left">
+            <div class="flex items-center gap-1 mb-0.5">
+              {Array.from({ length: 5 }).map(() => (
+                <i class="fas fa-star text-yellow-400 text-sm"></i>
+              ))}
+            </div>
+            <p class="text-xs font-semibold text-slate-700 leading-none">Thumbtack 5 Stars</p>
+          </div>
+          <i class="fas fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-[#0F172A] transition-colors ml-1"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Carousel wrapper -->
+    <div class="relative">
+      <!-- Prev / Next buttons -->
+      <button
+        id="reviews-prev"
+        class="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-full shadow-md text-slate-600 hover:text-[#0F172A] hover:border-[#0F172A]/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Previous reviews"
+      >
+        <i class="fas fa-chevron-left text-sm"></i>
+      </button>
+
+      <button
+        id="reviews-next"
+        class="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-full shadow-md text-slate-600 hover:text-[#0F172A] hover:border-[#0F172A]/30 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Next reviews"
+      >
+        <i class="fas fa-chevron-right text-sm"></i>
+      </button>
+
+      <!-- Track -->
+      <div class="overflow-hidden">
+        <div
+          id="reviews-track"
+          class="flex gap-6 transition-transform duration-500 ease-in-out"
+          style="will-change: transform;"
+        >
+          {reviews.map(review => (
+            <div class="reviews-slide flex-none w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+              <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col gap-3 h-full">
+                <!-- Stars + Google badge -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1">
+                    {Array.from({ length: review.rating }).map(() => (
+                      <i class="fas fa-star text-yellow-400 text-sm"></i>
+                    ))}
+                  </div>
+                  <img
+                    src="https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png"
+                    alt="Google"
+                    class="w-4 h-4 opacity-70"
+                  />
+                </div>
+
+                <!-- Text -->
+                <p class="text-slate-700 text-sm leading-relaxed flex-1">"{review.text}"</p>
+
+                <!-- Author -->
+                <div class="flex items-center gap-3 pt-3 border-t border-slate-100 mt-auto">
+                  <div class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 text-[#0F172A] font-bold text-sm shrink-0">
+                    {review.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p class="font-semibold text-slate-900 text-sm">{review.name}</p>
+                    <p class="text-xs text-slate-400">Google Reviews</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div id="reviews-dots" class="flex items-center justify-center gap-2 mt-8">
+    </div>
+  </div>
+</section>
+
+<script>
+  const track = document.getElementById('reviews-track') as HTMLElement;
+  const prevBtn = document.getElementById('reviews-prev') as HTMLButtonElement;
+  const nextBtn = document.getElementById('reviews-next') as HTMLButtonElement;
+  const dotsContainer = document.getElementById('reviews-dots') as HTMLElement;
+  const slides = document.querySelectorAll<HTMLElement>('.reviews-slide');
+
+  let current = 0;
+  let perPage = 1;
+  let total = slides.length;
+  let autoplayTimer: ReturnType<typeof setInterval>;
+
+  function getPerPage() {
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+  }
+
+  function totalPages() {
+    return Math.ceil(total / perPage);
+  }
+
+  function buildDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < totalPages(); i++) {
+      const dot = document.createElement('button');
+      dot.className = 'w-2.5 h-2.5 rounded-full transition-all duration-300 ' +
+        (i === current ? 'bg-[#0F172A] w-6' : 'bg-slate-300 hover:bg-slate-400');
+      dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  function updateDots() {
+    const dots = dotsContainer.querySelectorAll('button');
+    dots.forEach((dot, i) => {
+      if (i === current) {
+        dot.className = 'w-6 h-2.5 rounded-full bg-[#0F172A] transition-all duration-300';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300';
+      }
+    });
+  }
+
+  function updateButtons() {
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current >= totalPages() - 1;
+  }
+
+  function goTo(index: number) {
+    current = Math.max(0, Math.min(index, totalPages() - 1));
+    const slideWidth = slides[0].offsetWidth + 24; // gap-6 = 24px
+    track.style.transform = `translateX(-${current * perPage * slideWidth}px)`;
+    updateDots();
+    updateButtons();
+  }
+
+  function setup() {
+    perPage = getPerPage();
+    current = 0;
+    buildDots();
+    goTo(0);
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayTimer = setInterval(() => {
+      if (current >= totalPages() - 1) {
+        goTo(0);
+      } else {
+        goTo(current + 1);
+      }
+    }, 5000);
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayTimer);
+  }
+
+  prevBtn.addEventListener('click', () => { goTo(current - 1); stopAutoplay(); });
+  nextBtn.addEventListener('click', () => { goTo(current + 1); stopAutoplay(); });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  track.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goTo(current + 1);
+      else goTo(current - 1);
+      stopAutoplay();
+    }
+  }, { passive: true });
+
+  // Pause on hover
+  track.addEventListener('mouseenter', stopAutoplay);
+  track.addEventListener('mouseleave', startAutoplay);
+
+  // Resize
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setup, 150);
+  });
+
+  // Init
+  setup();
+  startAutoplay();
+</script>

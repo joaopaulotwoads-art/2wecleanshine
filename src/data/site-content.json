@@ -1,0 +1,99 @@
+{
+  "contact": {
+    "phone": "678-650-2983",
+    "phoneHref": "+16786502983",
+    "email": "cleaneshine@hotmail.com",
+    "hours": "Mon – Sat: 8:00 AM – 6:00 PM",
+    "area": "Georgia, USA"
+  },
+  "hero": {
+    "badge": "Licensed & Insured • Georgia",
+    "eyebrow": "Clean & Shine Services • Georgia",
+    "headline1": "Consistency You Can See.",
+    "headline2": "Quality You Can Feel!",
+    "subheadline": "Professional, insured, and detail-oriented cleaning services designed for consistent, high-quality results.",
+    "ctaPrimary": "Request a Free Estimate",
+    "ctaSecondary": "Explore Our Services"
+  },
+  "about": {
+    "eyebrow": "About Clean & Shine",
+    "headline1": "Consistency You Can See.",
+    "headline2": "Quality You Can Feel.",
+    "paragraph1": "Clean & Shine is a professional cleaning company serving Georgia with dedication, care, and trust. We take pride in our work and treat every home as if it were our own, ensuring quality, consistency, and trust in every visit.",
+    "paragraph2": "Led by Bruna, our team is trained to deliver a consistently high standard — from the everyday details to the hard-to-reach spots. Whether it's a weekly recurring service or a one-time deep clean, we show up ready to deliver results.",
+    "paragraph3": "We serve multiple cities and neighborhoods across Georgia. Share your ZIP code when requesting an estimate and we will confirm availability for your address.",
+    "stat1Value": "5",
+    "stat1Label": "Years Experience",
+    "stat2Value": "5★",
+    "stat2Label": "Google Rated",
+    "stat3Value": "100%",
+    "stat3Label": "Satisfaction Focus",
+    "ctaLabel": "Request Estimate",
+    "trustBadges": [
+      { "icon": "fa-shield-halved", "label": "Fully Insured", "desc": "Bonded and insured for your complete peace of mind." },
+      { "icon": "fa-user-check", "label": "Background-Checked", "desc": "Every member of our team is individually vetted." },
+      { "icon": "fa-leaf", "label": "Eco-Friendly", "desc": "Safe for your kids, your pets, and the planet." },
+      { "icon": "fa-redo", "label": "Satisfaction Guaranteed", "desc": "If you're not satisfied, we'll re-clean for free." },
+      { "icon": "fa-clock", "label": "Punctual & Reliable", "desc": "We show up on time and communicate if anything changes." },
+      { "icon": "fa-mobile-screen", "label": "Online Booking", "desc": "Request quotes and schedule service easily." }
+    ]
+  },
+  "services": [
+    {
+      "id": "recurring",
+      "title": "Recurring Home Cleaning",
+      "tagline": "Enjoy the comfort of a consistently clean home with reliable scheduled visits and attention to detail.",
+      "description": "Life gets busy — cleaning should not be overwhelming. Regular cleaning keeps your home welcoming, healthy, and stress-free without you having to think about it. Enjoy more free time while we handle the details and maintain your space at a consistently high standard.",
+      "image": "/images/services/regular-cleaning.webp",
+      "icon": "fa-rotate",
+      "highlights": [
+        "Weekly, bi-weekly, or monthly plans",
+        "Consistency prevents buildup and stress",
+        "More free time while we handle every detail",
+        "Your home stays welcoming, healthy, and always ready"
+      ]
+    },
+    {
+      "id": "deep-cleaning",
+      "title": "Deep Cleaning",
+      "tagline": "When your home needs more than maintenance, we deliver a complete refresh with detail-focused deep cleaning.",
+      "description": "Deep cleaning is ideal when your home needs more than routine maintenance. We remove buildup, hidden dust, and neglected areas that regular cleaning does not fully address, restoring your home to a higher standard and creating the perfect foundation for ongoing recurring service.",
+      "image": "/images/services/Deep Cleaning.webp",
+      "icon": "fa-magnifying-glass",
+      "highlights": [
+        "Removes buildup, hidden dust, and neglected areas",
+        "Heavy-duty products for deep cleaning when necessary",
+        "Complete reset for a noticeably fresher home",
+        "Ideal before starting recurring service"
+      ]
+    },
+    {
+      "id": "commercial-cleaning",
+      "title": "Commercial Cleaning",
+      "tagline": "A spotless, sanitary, and welcoming environment for your staff and visitors with reliable commercial service.",
+      "description": "A clean workspace reflects your business standards. Our commercial cleaning service is built on consistency, attention to detail, and dependable execution you can count on. We offer customized plans to match your business routine and facility requirements.",
+      "image": "/images/services/commercial-cleaning.webp",
+      "icon": "fa-building",
+      "highlights": [
+        "Customized plans for your business routine",
+        "Consistent and dependable execution",
+        "Spotless, sanitary, welcoming environment",
+        "We use high-grade equipment and specialized chemicals"
+      ]
+    },
+    {
+      "id": "move-cleaning",
+      "title": "Move In/Out Cleaning",
+      "tagline": "Detailed top-to-bottom cleaning to prepare your property for move-in, move-out, or final inspection.",
+      "description": "Our Move In / Move Out Cleaning is a detailed deep cleaning designed to prepare your home for its next chapter. This service is ideal for tenants, homeowners, landlords, and real estate transitions. We clean inside cabinets, appliances, bathrooms, baseboards, doors, and hard-to-reach areas so the property is spotless, sanitized, and ready for move-in or final inspection.",
+      "image": "/images/services/move-cleaning.webp",
+      "icon": "fa-truck-moving",
+      "highlights": [
+        "Top-to-bottom detail cleaning",
+        "Inside cabinets, appliances, and hard-to-reach areas",
+        "Ideal for tenants, homeowners, and landlords",
+        "Ready for move-in or final inspection"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+---
+import { getContent } from '../lib/content';
+const content = getContent();
+const services = content.services || [];
+---
+
+<section id="services" class="py-20 md:py-28 bg-white bubble-pattern-light">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section header -->
+    <div class="text-center mb-16">
+      <p class="text-[#0F172A] font-semibold text-sm uppercase tracking-widest mb-3">What We Offer</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Our Cleaning Services</h2>
+      <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+        From regular home maintenance to deep cleaning and commercial spaces — we have a plan that fits your needs.
+      </p>
+    </div>
+
+    <!-- Services grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {services.map((service, i) => (
+        <div
+          class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col"
+        >
+          <!-- Image -->
+          <div class="relative h-56 overflow-hidden bg-slate-100">
+            <img
+              src={service.image}
+              alt={service.title}
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              onerror="this.parentElement.classList.add('flex', 'items-center', 'justify-center'); this.style.display='none'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-4 left-4">
+              <span class="inline-flex items-center gap-2 bg-[#0F172A] text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-full">
+                <i class={`fas ${service.icon} text-xs`}></i>
+                {service.title}
+              </span>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6 flex flex-col flex-1">
+            <p class="text-slate-600 leading-relaxed mb-4">{service.tagline}</p>
+
+            <ul class="space-y-2 mt-auto">
+              {service.highlights.map(h => (
+                <li class="flex items-start gap-2 text-sm text-slate-700">
+                  <i class="fas fa-check-circle text-[#0F172A] mt-0.5 shrink-0"></i>
+                  {h}
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-6 pt-4 border-t border-slate-100">
+              <a
+                href="#contact"
+                class="inline-flex items-center gap-2 text-[#0F172A] hover:text-[#0F172A] font-semibold text-sm transition-colors group/link"
+              >
+                Request this service
+                <i class="fas fa-arrow-right text-xs group-hover/link:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
