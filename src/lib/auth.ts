@@ -29,7 +29,7 @@ export function isAuthenticated(request: Request): boolean {
 }
 
 export function checkCredentials(user: string, pass: string): boolean {
-  const validUser = import.meta.env.ADMIN_USER ?? 'admin';
-  const validPass = import.meta.env.ADMIN_PASS ?? 'cleanshine2024';
+  const validUser = import.meta.env.ADMIN_USER;
+  const validPass = import.meta.env.ADMIN_PASS;
   return user === validUser && pass === validPass;
 }
