@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export interface GalleryPhoto {
@@ -9,8 +9,11 @@ export interface GalleryPhoto {
 }
 
 const LOCAL_FILE = join(process.cwd(), 'src', 'data', 'gallery.json');
+const TMP_FILE = '/tmp/weclean-gallery.json';
 const BLOB_KEY = 'gallery-data.json';
-const IS_VERCEL = !!(process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN);
+
+const IS_VERCEL = !!process.env.VERCEL;
+const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN);
 
 function readLocal(): GalleryPhoto[] {
   try {
@@ -20,12 +23,21 @@ function readLocal(): GalleryPhoto[] {
   }
 }
 
-function writeLocal(photos: GalleryPhoto[]): void {
-  writeFileSync(LOCAL_FILE, JSON.stringify(photos, null, 2));
+function readTmp(): GalleryPhoto[] {
+  try {
+    if (!existsSync(TMP_FILE)) copyFileSync(LOCAL_FILE, TMP_FILE);
+    return JSON.parse(readFileSync(TMP_FILE, 'utf-8'));
+  } catch {
+    return readLocal();
+  }
+}
+
+function writeTmp(photos: GalleryPhoto[]): void {
+  writeFileSync(TMP_FILE, JSON.stringify(photos, null, 2));
 }
 
 async function readPhotos(): Promise<GalleryPhoto[]> {
-  if (IS_VERCEL) {
+  if (HAS_BLOB) {
     try {
       const { list } = await import('@vercel/blob');
       const { blobs } = await list({ prefix: BLOB_KEY });
@@ -34,14 +46,15 @@ async function readPhotos(): Promise<GalleryPhoto[]> {
       const res = await fetch(meta.url, { cache: 'no-store' });
       return await res.json();
     } catch {
-      return readLocal();
+      return IS_VERCEL ? readTmp() : readLocal();
     }
   }
+  if (IS_VERCEL) return readTmp();
   return readLocal();
 }
 
 async function writePhotos(photos: GalleryPhoto[]): Promise<void> {
-  if (IS_VERCEL) {
+  if (HAS_BLOB) {
     const { put } = await import('@vercel/blob');
     await put(BLOB_KEY, JSON.stringify(photos, null, 2), {
       access: 'public',
@@ -50,7 +63,8 @@ async function writePhotos(photos: GalleryPhoto[]): Promise<void> {
     });
     return;
   }
-  writeLocal(photos);
+  if (IS_VERCEL) { writeTmp(photos); return; }
+  writeFileSync(LOCAL_FILE, JSON.stringify(photos, null, 2));
 }
 
 export async function getPhotos(): Promise<GalleryPhoto[]> {
