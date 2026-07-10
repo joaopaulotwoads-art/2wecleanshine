@@ -7,7 +7,7 @@ export const prerender = false;
 
 const ALLOWED = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif']);
 const IS_VERCEL = !!process.env.VERCEL;
-const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN);
+const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_STORE_ID);
 
 export const POST: APIRoute = async ({ request }) => {
   if (!isAuthenticated(request)) return new Response('Unauthorized', { status: 401 });

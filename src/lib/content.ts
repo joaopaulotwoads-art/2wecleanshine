@@ -6,7 +6,7 @@ const TMP_FILE = '/tmp/weclean-content.json';
 const BLOB_KEY = 'site-content.json';
 
 const IS_VERCEL = !!process.env.VERCEL;
-const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN);
+const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_STORE_ID);
 
 function readLocal(): Record<string, any> {
   try {

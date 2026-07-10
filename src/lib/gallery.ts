@@ -13,7 +13,7 @@ const TMP_FILE = '/tmp/weclean-gallery.json';
 const BLOB_KEY = 'gallery-data.json';
 
 const IS_VERCEL = !!process.env.VERCEL;
-const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN);
+const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_STORE_ID);
 
 function readLocal(): GalleryPhoto[] {
   try {
