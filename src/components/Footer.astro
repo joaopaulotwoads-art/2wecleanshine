@@ -1,6 +1,6 @@
 ---
 import { getContent } from '../lib/content';
-const content = getContent();
+const content = await getContent();
 const c = content.contact || {};
 const year = new Date().getFullYear();
 const links = [

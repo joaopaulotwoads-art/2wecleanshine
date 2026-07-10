@@ -8,7 +8,7 @@ if (!isAuthenticated(Astro.request)) {
   return Astro.redirect('/login');
 }
 
-const photos = getPhotos();
+const photos = await getPhotos();
 ---
 
 <AdminLayout title="Gallery Management">
@@ -109,7 +109,7 @@ const photos = getPhotos();
                 <i class="fas fa-image text-2xl text-slate-600"></i>
               </div>
             </div>
-            <!-- Info + delete -->
+            <!-- Info + actions -->
             <div class="p-3 flex items-start gap-2 flex-1">
               <div class="flex-1 min-w-0">
                 <p class="text-white text-xs font-semibold truncate" title={photo.label}>{photo.label}</p>
@@ -117,14 +117,26 @@ const photos = getPhotos();
                   <p class="text-slate-400 text-xs truncate mt-0.5" title={photo.caption}>{photo.caption}</p>
                 )}
               </div>
-              <button
-                class="btn-delete flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
-                data-id={photo.id}
-                data-label={photo.label}
-                title="Delete photo"
-              >
-                <i class="fas fa-trash text-xs"></i>
-              </button>
+              <div class="flex gap-1 flex-shrink-0">
+                <button
+                  class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-400 hover:text-white transition-colors"
+                  data-id={photo.id}
+                  data-label={photo.label}
+                  data-caption={photo.caption || ''}
+                  data-src={photo.src}
+                  title="Edit photo"
+                >
+                  <i class="fas fa-pencil text-xs"></i>
+                </button>
+                <button
+                  class="btn-delete w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
+                  data-id={photo.id}
+                  data-label={photo.label}
+                  title="Delete photo"
+                >
+                  <i class="fas fa-trash text-xs"></i>
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -144,6 +156,47 @@ const photos = getPhotos();
     <div id="toast-inner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium text-white min-w-48">
       <i id="toast-icon" class="fas"></i>
       <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-white font-semibold">Edit Photo</h3>
+        <button id="edit-modal-close" class="text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <img id="edit-preview" src="" alt="" class="w-full h-36 object-cover rounded-xl mb-5" />
+      <div class="space-y-4">
+        <div>
+          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Label <span class="text-red-400">*</span></label>
+          <input
+            id="edit-label"
+            type="text"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Caption</label>
+          <input
+            id="edit-caption"
+            type="text"
+            placeholder="Short description shown on hover"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+          />
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button id="edit-cancel" class="flex-1 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium transition-colors">
+          Cancel
+        </button>
+        <button id="edit-save" class="flex-1 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-sm font-semibold transition-colors disabled:opacity-50">
+          Save
+        </button>
+      </div>
+      <input type="hidden" id="edit-id" value="" />
     </div>
   </div>
 </AdminLayout>
@@ -181,7 +234,7 @@ const photos = getPhotos();
   }
 
   function setFile(file: File) {
-    fileInput._file = file;
+    (fileInput as any)._file = file;
     previewName.textContent = file.name;
     previewSize.textContent = formatBytes(file.size);
     previewImg.src = URL.createObjectURL(file);
@@ -269,14 +322,19 @@ const photos = getPhotos();
             <p class="text-white text-xs font-semibold truncate" title="${label}">${label}</p>
             ${caption ? `<p class="text-slate-400 text-xs truncate mt-0.5" title="${caption}">${caption}</p>` : ''}
           </div>
-          <button
-            class="btn-delete flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
-            data-id="${newPhoto.id}" data-label="${label}" title="Delete photo"
-          >
-            <i class="fas fa-trash text-xs"></i>
-          </button>
+          <div class="flex gap-1 flex-shrink-0">
+            <button
+              class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-400 hover:text-white transition-colors"
+              data-id="${newPhoto.id}" data-label="${label}" data-caption="${caption}" data-src="${url}" title="Edit photo"
+            ><i class="fas fa-pencil text-xs"></i></button>
+            <button
+              class="btn-delete w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
+              data-id="${newPhoto.id}" data-label="${label}" title="Delete photo"
+            ><i class="fas fa-trash text-xs"></i></button>
+          </div>
         </div>`;
       photosGrid.appendChild(card);
+      attachEdit(card.querySelector('.btn-edit') as HTMLButtonElement);
       attachDelete(card.querySelector('.btn-delete') as HTMLButtonElement);
 
       clearFile();
@@ -290,6 +348,100 @@ const photos = getPhotos();
       btnAdd.innerHTML = '<i class="fas fa-plus"></i> Add Photo';
     }
   });
+
+  // ── Edit modal ──────────────────────────────────────────
+  const editModal = document.getElementById('edit-modal') as HTMLElement;
+  const editIdInput = document.getElementById('edit-id') as HTMLInputElement;
+  const editLabelInput = document.getElementById('edit-label') as HTMLInputElement;
+  const editCaptionInput = document.getElementById('edit-caption') as HTMLInputElement;
+  const editPreview = document.getElementById('edit-preview') as HTMLImageElement;
+  const editSave = document.getElementById('edit-save') as HTMLButtonElement;
+  const editCancel = document.getElementById('edit-cancel') as HTMLButtonElement;
+  const editModalClose = document.getElementById('edit-modal-close') as HTMLButtonElement;
+
+  function openEditModal(id: string, label: string, caption: string, src: string) {
+    editIdInput.value = id;
+    editLabelInput.value = label;
+    editCaptionInput.value = caption;
+    editPreview.src = src;
+    editModal.classList.remove('hidden');
+    editModal.classList.add('flex');
+    editLabelInput.focus();
+  }
+
+  function closeEditModal() {
+    editModal.classList.add('hidden');
+    editModal.classList.remove('flex');
+  }
+
+  editModalClose.addEventListener('click', closeEditModal);
+  editCancel.addEventListener('click', closeEditModal);
+  editModal.addEventListener('click', (e) => {
+    if (e.target === editModal) closeEditModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeEditModal();
+  });
+
+  editSave.addEventListener('click', async () => {
+    const id = editIdInput.value;
+    const label = editLabelInput.value.trim();
+    const caption = editCaptionInput.value.trim();
+    if (!label) { showToast('Label is required.', true); return; }
+
+    editSave.disabled = true;
+    editSave.textContent = 'Saving…';
+
+    try {
+      const res = await fetch(`/api/gallery/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label, caption }),
+      });
+      if (!res.ok) throw new Error('Failed to save');
+
+      const card = document.querySelector<HTMLElement>(`.photo-card[data-id="${id}"]`);
+      if (card) {
+        const labelEl = card.querySelector<HTMLElement>('p.text-white.text-xs');
+        if (labelEl) { labelEl.textContent = label; labelEl.title = label; }
+        let captionEl = card.querySelector<HTMLElement>('p.text-slate-400.text-xs');
+        if (caption) {
+          if (!captionEl) {
+            captionEl = document.createElement('p');
+            captionEl.className = 'text-slate-400 text-xs truncate mt-0.5';
+            labelEl?.after(captionEl);
+          }
+          captionEl.textContent = caption;
+          captionEl.title = caption;
+        } else {
+          captionEl?.remove();
+        }
+        const editBtn = card.querySelector<HTMLButtonElement>('.btn-edit');
+        const deleteBtn = card.querySelector<HTMLButtonElement>('.btn-delete');
+        if (editBtn) { editBtn.dataset.label = label; editBtn.dataset.caption = caption; }
+        if (deleteBtn) deleteBtn.dataset.label = label;
+      }
+
+      closeEditModal();
+      showToast('Photo updated!');
+    } catch (err: any) {
+      showToast(err.message || 'Error saving.', true);
+    } finally {
+      editSave.disabled = false;
+      editSave.textContent = 'Save';
+    }
+  });
+
+  function attachEdit(btn: HTMLButtonElement) {
+    btn.addEventListener('click', () => {
+      openEditModal(
+        btn.dataset.id!,
+        btn.dataset.label || '',
+        btn.dataset.caption || '',
+        btn.dataset.src || ''
+      );
+    });
+  }
 
   // ── Delete ──────────────────────────────────────────────
   function attachDelete(btn: HTMLButtonElement) {
@@ -307,5 +459,6 @@ const photos = getPhotos();
     });
   }
 
+  document.querySelectorAll<HTMLButtonElement>('.btn-edit').forEach(attachEdit);
   document.querySelectorAll<HTMLButtonElement>('.btn-delete').forEach(attachDelete);
 </script>

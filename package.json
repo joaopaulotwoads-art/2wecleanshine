@@ -15,6 +15,7 @@
     "@astrojs/node": "^10.1.4",
     "@astrojs/vercel": "^10.0.8",
     "@tailwindcss/vite": "^4.3.1",
+    "@vercel/blob": "^2.6.1",
     "astro": "^6.4.7",
     "tailwindcss": "^4.3.1"
   }

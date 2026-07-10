@@ -8,7 +8,7 @@ if (!isAuthenticated(Astro.request)) {
   return Astro.redirect('/login');
 }
 
-const content = getContent();
+const content = await getContent();
 const c = content.contact || {};
 const h = content.hero || {};
 const a = content.about || {};

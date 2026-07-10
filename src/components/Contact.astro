@@ -1,6 +1,6 @@
 ---
 import { getContent } from '../lib/content';
-const content = getContent();
+const content = await getContent();
 const c = content.contact || {};
 ---
 
@@ -28,6 +28,7 @@ const c = content.contact || {};
           <input type="hidden" name="_subject" value="New cleaning estimate request from Clean & Shine site" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="https://wecleanshine.com/thank-you" />
           <input type="text" name="_honey" class="hidden" />
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

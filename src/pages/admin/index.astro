@@ -4,8 +4,8 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 import { getPhotos } from '../../lib/gallery';
 import { getContent } from '../../lib/content';
 
-const photos = getPhotos();
-const content = getContent();
+const photos = await getPhotos();
+const content = await getContent();
 const phone = content.contact?.phone || '—';
 const email = content.contact?.email || '—';
 ---

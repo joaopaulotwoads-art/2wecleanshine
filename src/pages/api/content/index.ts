@@ -6,7 +6,7 @@ export const prerender = false;
 
 export const GET: APIRoute = async ({ request }) => {
   if (!isAuthenticated(request)) return new Response('Unauthorized', { status: 401 });
-  return new Response(JSON.stringify(getContent()), {
+  return new Response(JSON.stringify(await getContent()), {
     headers: { 'Content-Type': 'application/json' },
   });
 };
@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ request }) => {
 export const PUT: APIRoute = async ({ request }) => {
   if (!isAuthenticated(request)) return new Response('Unauthorized', { status: 401 });
   const body = await request.json();
-  const updated = updateContent(body);
+  const updated = await updateContent(body);
   return new Response(JSON.stringify(updated), {
     headers: { 'Content-Type': 'application/json' },
   });

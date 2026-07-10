@@ -1,6 +1,6 @@
 ---
 import { getContent } from '../lib/content';
-const content = getContent();
+const content = await getContent();
 const a = content.about || {};
 const trustBadges = a.trustBadges || [];
 ---
