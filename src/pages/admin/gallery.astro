@@ -12,453 +12,496 @@ const photos = await getPhotos();
 ---
 
 <AdminLayout title="Gallery Management">
-  <div class="p-6 lg:p-8 max-w-5xl mx-auto">
+  <div class="p-6 lg:p-8 max-w-4xl mx-auto">
 
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-white">Gallery</h1>
-      <p class="text-slate-400 text-sm mt-1">{photos.length} photos · displayed on the home page</p>
+      <p class="text-slate-400 text-sm mt-1" id="photo-count">{photos.length} photo{photos.length !== 1 ? 's' : ''} · displayed on the home page</p>
     </div>
 
-    <!-- Upload zone -->
+    <!-- ── Upload Section ──────────────────────────────── -->
     <div class="bg-slate-800 border border-white/10 rounded-2xl p-6 mb-8">
       <h2 class="text-white font-semibold mb-5 flex items-center gap-2">
-        <i class="fas fa-plus-circle text-slate-400"></i>
-        Add Photo
+        <i class="fas fa-plus text-green-400"></i>
+        Add New Photo
       </h2>
 
-      <!-- Drop area -->
       <div
         id="drop-zone"
-        class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer transition-colors hover:border-white/40 hover:bg-white/5 mb-5"
+        class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer transition-all hover:border-green-400/50 hover:bg-green-400/5 mb-5"
       >
         <i class="fas fa-cloud-upload-alt text-3xl text-slate-500 mb-3 block"></i>
         <p class="text-slate-300 font-medium text-sm">Drag & drop an image here</p>
-        <p class="text-slate-500 text-xs mt-1 mb-3">or click to browse</p>
+        <p class="text-slate-500 text-xs mt-1 mb-4">or click to browse · JPG, PNG, WEBP, AVIF</p>
         <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,.gif,.avif" class="hidden" />
-        <label for="file-input" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium px-4 py-2 rounded-lg cursor-pointer transition-colors">
-          <i class="fas fa-folder-open"></i> Browse
+        <label for="file-input" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold px-5 py-2.5 rounded-lg cursor-pointer transition-colors">
+          <i class="fas fa-folder-open"></i> Browse Files
         </label>
       </div>
 
       <!-- Preview -->
       <div id="preview-wrap" class="hidden mb-5">
-        <div class="flex items-start gap-4 bg-slate-900 rounded-xl p-4 border border-white/10">
-          <img id="preview-img" src="" alt="" class="w-24 h-24 rounded-lg object-cover flex-shrink-0" />
+        <div class="flex items-center gap-4 bg-slate-900 rounded-xl p-4 border border-green-500/30">
+          <img id="preview-img" src="" alt="" class="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-white/10" />
           <div class="flex-1 min-w-0">
             <p id="preview-name" class="text-white text-sm font-medium truncate"></p>
             <p id="preview-size" class="text-slate-400 text-xs mt-0.5"></p>
-            <button id="btn-clear" class="mt-2 text-xs text-red-400 hover:text-red-300 transition-colors">
-              <i class="fas fa-times mr-1"></i>Remove
+            <button id="btn-clear" class="mt-2 inline-flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 transition-colors">
+              <i class="fas fa-times"></i> Remove
             </button>
+          </div>
+          <div class="text-green-400 flex-shrink-0">
+            <i class="fas fa-circle-check text-lg"></i>
           </div>
         </div>
       </div>
 
-      <!-- Label & Caption -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <div>
-          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Label <span class="text-red-400">*</span></label>
+          <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wide">
+            Label <span class="text-red-400">*</span>
+          </label>
           <input
             id="input-label"
             type="text"
-            placeholder="e.g. Bathroom — Before"
-            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+            placeholder="ex: Bathroom Before/After"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/20 text-sm transition-all"
           />
         </div>
         <div>
-          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Caption <span class="text-slate-600 font-normal normal-case">(optional)</span></label>
+          <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wide">
+            Caption <span class="text-slate-600 font-normal normal-case">(optional)</span>
+          </label>
           <input
             id="input-caption"
             type="text"
             placeholder="Short description shown on hover"
-            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/20 text-sm transition-all"
           />
         </div>
       </div>
 
       <button
         id="btn-add"
-        class="inline-flex items-center gap-2 bg-white text-slate-900 font-semibold px-6 py-2.5 rounded-xl text-sm hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white font-bold px-6 py-3 rounded-xl text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-green-500/20"
       >
         <i class="fas fa-plus"></i>
         Add Photo
       </button>
     </div>
 
-    <!-- Photos list -->
+    <!-- ── Photos List ──────────────────────────────────── -->
     <div>
       <h2 class="text-white font-semibold mb-4 flex items-center gap-2">
         <i class="fas fa-images text-slate-400"></i>
         Current Photos
       </h2>
 
-      <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div id="photos-list" class="space-y-3">
         {photos.map((photo, i) => (
-          <div class="photo-card bg-slate-800 rounded-2xl overflow-hidden border border-white/10 flex flex-col" data-id={photo.id}>
-            <!-- Image -->
-            <div class="relative" style="aspect-ratio:4/3;">
-              <span class="absolute top-2 left-2 z-10 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md">{i + 1}</span>
+          <div
+            class="photo-row group bg-slate-800 hover:bg-slate-750 border border-white/10 hover:border-white/20 rounded-2xl p-4 flex items-center gap-4 transition-all"
+            data-id={photo.id}
+          >
+            <!-- Number -->
+            <span class="w-6 text-center text-slate-500 text-xs font-bold flex-shrink-0">{i + 1}</span>
+
+            <!-- Thumbnail -->
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-slate-900 border border-white/10">
               <img
                 src={photo.src}
                 alt={photo.label}
                 class="w-full h-full object-cover"
                 onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden')"
               />
-              <div class="hidden absolute inset-0 flex items-center justify-center bg-slate-900">
-                <i class="fas fa-image text-2xl text-slate-600"></i>
+              <div class="hidden w-full h-full flex items-center justify-center">
+                <i class="fas fa-image text-slate-600"></i>
               </div>
             </div>
-            <!-- Info + actions -->
-            <div class="p-3 flex items-start gap-2 flex-1">
-              <div class="flex-1 min-w-0">
-                <p class="text-white text-xs font-semibold truncate" title={photo.label}>{photo.label}</p>
-                {photo.caption && (
-                  <p class="text-slate-400 text-xs truncate mt-0.5" title={photo.caption}>{photo.caption}</p>
-                )}
-              </div>
-              <div class="flex gap-1 flex-shrink-0">
-                <button
-                  class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-400 hover:text-white transition-colors"
-                  data-id={photo.id}
-                  data-label={photo.label}
-                  data-caption={photo.caption || ''}
-                  data-src={photo.src}
-                  title="Edit photo"
-                >
-                  <i class="fas fa-pencil text-xs"></i>
-                </button>
-                <button
-                  class="btn-delete w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
-                  data-id={photo.id}
-                  data-label={photo.label}
-                  title="Delete photo"
-                >
-                  <i class="fas fa-trash text-xs"></i>
-                </button>
-              </div>
+
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <p class="photo-label text-white text-sm font-semibold truncate">{photo.label}</p>
+              <p class="photo-caption text-slate-400 text-xs mt-0.5 truncate">{photo.caption || '—'}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button
+                class="btn-edit inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+                data-id={photo.id}
+                data-label={photo.label}
+                data-caption={photo.caption || ''}
+                data-src={photo.src}
+              >
+                <i class="fas fa-pencil text-xs"></i>
+                <span class="hidden sm:inline">Edit</span>
+              </button>
+              <button
+                class="btn-delete inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-700 hover:bg-red-600 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+                data-id={photo.id}
+                data-label={photo.label}
+              >
+                <i class="fas fa-trash text-xs"></i>
+                <span class="hidden sm:inline">Delete</span>
+              </button>
             </div>
           </div>
         ))}
       </div>
 
       {photos.length === 0 && (
-        <div class="text-center py-20 text-slate-500">
+        <div id="empty-state" class="text-center py-20 text-slate-500 bg-slate-800/50 rounded-2xl border border-white/5">
           <i class="fas fa-images text-4xl mb-3 block"></i>
-          <p>No photos yet. Add your first photo above.</p>
+          <p class="text-sm">No photos yet. Add your first photo above.</p>
         </div>
       )}
     </div>
   </div>
 
-  <!-- Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
-    <div id="toast-inner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium text-white min-w-48">
-      <i id="toast-icon" class="fas"></i>
+  <!-- ── Toast ─────────────────────────────────────────── -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 pointer-events-none" style="display:none">
+    <div id="toast-inner" class="flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl text-sm font-semibold text-white">
+      <i id="toast-icon" class="fas text-base"></i>
       <span id="toast-msg"></span>
     </div>
   </div>
 
-  <!-- Edit Modal -->
-  <div id="edit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
-    <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-sm mx-4 border border-white/10 shadow-2xl">
+  <!-- ── Edit Modal ─────────────────────────────────────── -->
+  <div id="edit-modal" style="display:none" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+    <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between mb-5">
-        <h3 class="text-white font-semibold">Edit Photo</h3>
-        <button id="edit-modal-close" class="text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10">
+        <h3 class="text-white font-bold text-lg">Edit Photo</h3>
+        <button id="edit-modal-close" class="text-slate-400 hover:text-white hover:bg-white/10 w-8 h-8 flex items-center justify-center rounded-lg transition-colors">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <img id="edit-preview" src="" alt="" class="w-full h-36 object-cover rounded-xl mb-5" />
-      <div class="space-y-4">
+      <div class="mb-5 rounded-xl overflow-hidden border border-white/10 bg-slate-900" style="height:140px">
+        <img id="edit-preview" src="" alt="" class="w-full h-full object-cover" />
+      </div>
+      <div class="space-y-4 mb-6">
         <div>
-          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Label <span class="text-red-400">*</span></label>
+          <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wide">
+            Label <span class="text-red-400">*</span>
+          </label>
           <input
             id="edit-label"
             type="text"
-            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 text-sm transition-all"
           />
         </div>
         <div>
-          <label class="block text-slate-400 text-xs font-medium mb-1.5 uppercase tracking-wide">Caption</label>
+          <label class="block text-slate-400 text-xs font-semibold mb-1.5 uppercase tracking-wide">Caption</label>
           <input
             id="edit-caption"
             type="text"
             placeholder="Short description shown on hover"
-            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 text-sm transition-colors"
+            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 text-sm transition-all"
           />
         </div>
       </div>
-      <div class="flex gap-3 mt-6">
-        <button id="edit-cancel" class="flex-1 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium transition-colors">
+      <div class="flex gap-3">
+        <button id="edit-cancel" class="flex-1 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold transition-colors">
           Cancel
         </button>
-        <button id="edit-save" class="flex-1 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-sm font-semibold transition-colors disabled:opacity-50">
-          Save
+        <button id="edit-save" class="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold transition-colors disabled:opacity-40">
+          <i class="fas fa-check mr-1.5"></i> Save Changes
         </button>
       </div>
-      <input type="hidden" id="edit-id" value="" />
+      <input type="hidden" id="edit-id" />
     </div>
   </div>
 </AdminLayout>
 
 <script>
-  // ── Toast ──────────────────────────────────────────────
-  const toast = document.getElementById('toast')!;
-  const toastInner = document.getElementById('toast-inner')!;
-  const toastMsg = document.getElementById('toast-msg')!;
-  const toastIcon = document.getElementById('toast-icon')!;
-  let toastTimer: ReturnType<typeof setTimeout>;
-
-  function showToast(msg: string, isError = false) {
-    clearTimeout(toastTimer);
-    toastMsg.textContent = msg;
-    toastIcon.className = `fas ${isError ? 'fa-circle-xmark' : 'fa-circle-check'}`;
-    toastInner.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-sm font-medium text-white min-w-48 ${isError ? 'bg-red-600' : 'bg-green-600'}`;
-    toast.classList.remove('hidden');
-    toastTimer = setTimeout(() => toast.classList.add('hidden'), 4000);
+(function () {
+  // ── Helpers ──────────────────────────────────────────
+  function el(id: string) {
+    return document.getElementById(id);
   }
 
-  // ── File input & drop zone ──────────────────────────────
-  const dropZone = document.getElementById('drop-zone') as HTMLElement;
-  const fileInput = document.getElementById('file-input') as HTMLInputElement;
-  const previewWrap = document.getElementById('preview-wrap') as HTMLElement;
-  const previewImg = document.getElementById('preview-img') as HTMLImageElement;
-  const previewName = document.getElementById('preview-name') as HTMLElement;
-  const previewSize = document.getElementById('preview-size') as HTMLElement;
-  const btnClear = document.getElementById('btn-clear') as HTMLButtonElement;
+  let toastTimer: ReturnType<typeof setTimeout>;
+  function showToast(msg: string, isError = false) {
+    const toast = el('toast');
+    const inner = el('toast-inner');
+    const icon = el('toast-icon');
+    const msgEl = el('toast-msg');
+    if (!toast || !inner || !icon || !msgEl) return;
+    clearTimeout(toastTimer);
+    msgEl.textContent = msg;
+    icon.className = `fas ${isError ? 'fa-circle-xmark' : 'fa-circle-check'} text-base`;
+    inner.className = `flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl text-sm font-semibold text-white ${isError ? 'bg-red-600' : 'bg-green-600'}`;
+    (toast as HTMLElement).style.display = 'block';
+    toastTimer = setTimeout(() => { (toast as HTMLElement).style.display = 'none'; }, 4000);
+  }
 
-  function formatBytes(bytes: number) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / 1048576).toFixed(1) + ' MB';
+  // ── File input ───────────────────────────────────────
+  const dropZone = el('drop-zone');
+  const fileInput = el('file-input') as HTMLInputElement | null;
+  const previewWrap = el('preview-wrap');
+  const previewImg = el('preview-img') as HTMLImageElement | null;
+  const previewName = el('preview-name');
+  const previewSize = el('preview-size');
+  const btnClear = el('btn-clear');
+
+  function formatBytes(n: number) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(1) + ' MB';
   }
 
   function setFile(file: File) {
+    if (!fileInput || !previewWrap || !previewImg || !previewName || !previewSize || !dropZone) return;
     (fileInput as any)._file = file;
     previewName.textContent = file.name;
     previewSize.textContent = formatBytes(file.size);
     previewImg.src = URL.createObjectURL(file);
-    previewWrap.classList.remove('hidden');
-    dropZone.classList.add('border-green-500/50');
+    previewWrap.style.display = 'block';
+    dropZone.classList.add('border-green-400/50', 'bg-green-400/5');
   }
 
   function clearFile() {
+    if (!fileInput || !previewWrap || !previewImg || !dropZone) return;
     fileInput.value = '';
     (fileInput as any)._file = null;
-    previewWrap.classList.add('hidden');
-    previewImg.src = '';
-    dropZone.classList.remove('border-green-500/50');
+    previewWrap.style.display = 'none';
+    if (previewImg) previewImg.src = '';
+    dropZone.classList.remove('border-green-400/50', 'bg-green-400/5');
   }
 
-  dropZone.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('label')) return;
-    fileInput.click();
-  });
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('label')) return;
+      fileInput.click();
+    });
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) setFile(file);
+    });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-green-400/60', 'bg-green-400/10');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-green-400/60', 'bg-green-400/10');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-green-400/60', 'bg-green-400/10');
+      const file = e.dataTransfer?.files[0];
+      if (file && file.type.startsWith('image/')) setFile(file);
+    });
+  }
 
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files?.[0];
-    if (file) setFile(file);
-  });
+  if (btnClear) btnClear.addEventListener('click', clearFile);
 
-  btnClear.addEventListener('click', clearFile);
+  // ── Add photo ────────────────────────────────────────
+  const btnAdd = el('btn-add') as HTMLButtonElement | null;
+  const inputLabel = el('input-label') as HTMLInputElement | null;
+  const inputCaption = el('input-caption') as HTMLInputElement | null;
+  const photosList = el('photos-list');
+  const photoCountEl = el('photo-count');
 
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('border-white/60', 'bg-white/5');
-  });
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('border-white/60', 'bg-white/5');
-  });
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('border-white/60', 'bg-white/5');
-    const file = e.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) setFile(file);
-  });
+  function countPhotos() {
+    return document.querySelectorAll('.photo-row').length;
+  }
 
-  // ── Add photo ───────────────────────────────────────────
-  const btnAdd = document.getElementById('btn-add') as HTMLButtonElement;
-  const inputLabel = document.getElementById('input-label') as HTMLInputElement;
-  const inputCaption = document.getElementById('input-caption') as HTMLInputElement;
-  const photosGrid = document.getElementById('photos-grid') as HTMLElement;
+  if (btnAdd) {
+    btnAdd.addEventListener('click', async () => {
+      const file: File | null = (fileInput as any)?._file ?? fileInput?.files?.[0] ?? null;
+      const label = inputLabel?.value.trim() ?? '';
+      const caption = inputCaption?.value.trim() ?? '';
+      if (!file) { showToast('Choose an image file first.', true); return; }
+      if (!label) { showToast('Label is required.', true); return; }
 
-  btnAdd.addEventListener('click', async () => {
-    const file: File | null = (fileInput as any)._file ?? fileInput.files?.[0] ?? null;
-    const label = inputLabel.value.trim();
-    const caption = inputCaption.value.trim();
+      btnAdd.disabled = true;
+      btnAdd.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…';
 
-    if (!file) { showToast('Please choose an image file.', true); return; }
-    if (!label) { showToast('Label is required.', true); return; }
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const uploadRes = await fetch('/api/gallery/upload', { method: 'POST', body: fd });
+        if (!uploadRes.ok) throw new Error('Upload failed');
+        const { url } = await uploadRes.json();
 
-    btnAdd.disabled = true;
-    btnAdd.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading…';
+        const addRes = await fetch('/api/gallery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ src: url, label, caption }),
+        });
+        if (!addRes.ok) throw new Error('Failed to save photo');
+        const newPhoto = await addRes.json();
 
-    try {
-      const fd = new FormData();
-      fd.append('file', file);
-      const uploadRes = await fetch('/api/gallery/upload', { method: 'POST', body: fd });
-      if (!uploadRes.ok) throw new Error('Upload failed');
-      const { url } = await uploadRes.json();
-
-      const addRes = await fetch('/api/gallery', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ src: url, label, caption }),
-      });
-      if (!addRes.ok) throw new Error('Failed to save photo entry');
-      const newPhoto = await addRes.json();
-
-      const count = photosGrid.querySelectorAll('.photo-card').length + 1;
-      const card = document.createElement('div');
-      card.className = 'photo-card bg-slate-800 rounded-2xl overflow-hidden border border-white/10 flex flex-col';
-      card.dataset.id = newPhoto.id;
-      card.innerHTML = `
-        <div class="relative" style="aspect-ratio:4/3;">
-          <span class="absolute top-2 left-2 z-10 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md">${count}</span>
-          <img src="${url}" alt="${label}" class="w-full h-full object-cover" />
-        </div>
-        <div class="p-3 flex items-start gap-2 flex-1">
+        const count = countPhotos() + 1;
+        const row = document.createElement('div');
+        row.className = 'photo-row group bg-slate-800 hover:bg-slate-750 border border-white/10 hover:border-white/20 rounded-2xl p-4 flex items-center gap-4 transition-all';
+        row.dataset.id = newPhoto.id;
+        row.innerHTML = `
+          <span class="w-6 text-center text-slate-500 text-xs font-bold flex-shrink-0">${count}</span>
+          <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-slate-900 border border-white/10">
+            <img src="${url}" alt="${label}" class="w-full h-full object-cover" />
+          </div>
           <div class="flex-1 min-w-0">
-            <p class="text-white text-xs font-semibold truncate" title="${label}">${label}</p>
-            ${caption ? `<p class="text-slate-400 text-xs truncate mt-0.5" title="${caption}">${caption}</p>` : ''}
+            <p class="photo-label text-white text-sm font-semibold truncate">${label}</p>
+            <p class="photo-caption text-slate-400 text-xs mt-0.5 truncate">${caption || '—'}</p>
           </div>
-          <div class="flex gap-1 flex-shrink-0">
-            <button
-              class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-400 hover:text-white transition-colors"
-              data-id="${newPhoto.id}" data-label="${label}" data-caption="${caption}" data-src="${url}" title="Edit photo"
-            ><i class="fas fa-pencil text-xs"></i></button>
-            <button
-              class="btn-delete w-7 h-7 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-red-600 text-slate-400 hover:text-white transition-colors"
-              data-id="${newPhoto.id}" data-label="${label}" title="Delete photo"
-            ><i class="fas fa-trash text-xs"></i></button>
-          </div>
-        </div>`;
-      photosGrid.appendChild(card);
-      attachEdit(card.querySelector('.btn-edit') as HTMLButtonElement);
-      attachDelete(card.querySelector('.btn-delete') as HTMLButtonElement);
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <button class="btn-edit inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-700 hover:bg-blue-600 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+              data-id="${newPhoto.id}" data-label="${label}" data-caption="${caption}" data-src="${url}">
+              <i class="fas fa-pencil text-xs"></i>
+              <span class="hidden sm:inline">Edit</span>
+            </button>
+            <button class="btn-delete inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-700 hover:bg-red-600 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+              data-id="${newPhoto.id}" data-label="${label}">
+              <i class="fas fa-trash text-xs"></i>
+              <span class="hidden sm:inline">Delete</span>
+            </button>
+          </div>`;
 
-      clearFile();
-      inputLabel.value = '';
-      inputCaption.value = '';
-      showToast('Photo added!');
-    } catch (err: any) {
-      showToast(err.message || 'Error adding photo.', true);
-    } finally {
-      btnAdd.disabled = false;
-      btnAdd.innerHTML = '<i class="fas fa-plus"></i> Add Photo';
-    }
-  });
+        if (photosList) photosList.appendChild(row);
+        const emptyState = el('empty-state');
+        if (emptyState) emptyState.style.display = 'none';
+        attachEdit(row.querySelector('.btn-edit') as HTMLButtonElement);
+        attachDelete(row.querySelector('.btn-delete') as HTMLButtonElement);
 
-  // ── Edit modal ──────────────────────────────────────────
-  const editModal = document.getElementById('edit-modal') as HTMLElement;
-  const editIdInput = document.getElementById('edit-id') as HTMLInputElement;
-  const editLabelInput = document.getElementById('edit-label') as HTMLInputElement;
-  const editCaptionInput = document.getElementById('edit-caption') as HTMLInputElement;
-  const editPreview = document.getElementById('edit-preview') as HTMLImageElement;
-  const editSave = document.getElementById('edit-save') as HTMLButtonElement;
-  const editCancel = document.getElementById('edit-cancel') as HTMLButtonElement;
-  const editModalClose = document.getElementById('edit-modal-close') as HTMLButtonElement;
+        clearFile();
+        if (inputLabel) inputLabel.value = '';
+        if (inputCaption) inputCaption.value = '';
+        if (photoCountEl) photoCountEl.textContent = `${count} photo${count !== 1 ? 's' : ''} · displayed on the home page`;
+        showToast('Photo added!');
+      } catch (err: any) {
+        showToast(err.message || 'Error adding photo.', true);
+      } finally {
+        btnAdd.disabled = false;
+        btnAdd.innerHTML = '<i class="fas fa-plus"></i> Add Photo';
+      }
+    });
+  }
+
+  // ── Edit modal ───────────────────────────────────────
+  const editModal = el('edit-modal') as HTMLElement | null;
 
   function openEditModal(id: string, label: string, caption: string, src: string) {
-    editIdInput.value = id;
-    editLabelInput.value = label;
-    editCaptionInput.value = caption;
-    editPreview.src = src;
-    editModal.classList.remove('hidden');
-    editModal.classList.add('flex');
-    editLabelInput.focus();
+    const idInput = el('edit-id') as HTMLInputElement | null;
+    const labelInput = el('edit-label') as HTMLInputElement | null;
+    const captionInput = el('edit-caption') as HTMLInputElement | null;
+    const preview = el('edit-preview') as HTMLImageElement | null;
+    if (!editModal || !idInput || !labelInput || !captionInput) return;
+    idInput.value = id;
+    labelInput.value = label;
+    if (captionInput) captionInput.value = caption;
+    if (preview) preview.src = src;
+    editModal.style.display = 'flex';
+    labelInput.focus();
   }
 
   function closeEditModal() {
-    editModal.classList.add('hidden');
-    editModal.classList.remove('flex');
+    if (editModal) editModal.style.display = 'none';
   }
 
-  editModalClose.addEventListener('click', closeEditModal);
-  editCancel.addEventListener('click', closeEditModal);
-  editModal.addEventListener('click', (e) => {
-    if (e.target === editModal) closeEditModal();
-  });
+  const editModalClose = el('edit-modal-close');
+  const editCancel = el('edit-cancel');
+  const editSave = el('edit-save') as HTMLButtonElement | null;
+
+  if (editModalClose) editModalClose.addEventListener('click', closeEditModal);
+  if (editCancel) editCancel.addEventListener('click', closeEditModal);
+  if (editModal) {
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) closeEditModal();
+    });
+  }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeEditModal();
   });
 
-  editSave.addEventListener('click', async () => {
-    const id = editIdInput.value;
-    const label = editLabelInput.value.trim();
-    const caption = editCaptionInput.value.trim();
-    if (!label) { showToast('Label is required.', true); return; }
+  if (editSave) {
+    editSave.addEventListener('click', async () => {
+      const idInput = el('edit-id') as HTMLInputElement | null;
+      const labelInput = el('edit-label') as HTMLInputElement | null;
+      const captionInput = el('edit-caption') as HTMLInputElement | null;
+      const id = idInput?.value ?? '';
+      const label = labelInput?.value.trim() ?? '';
+      const caption = captionInput?.value.trim() ?? '';
+      if (!label) { showToast('Label is required.', true); return; }
 
-    editSave.disabled = true;
-    editSave.textContent = 'Saving…';
+      editSave.disabled = true;
+      editSave.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Saving…';
 
-    try {
-      const res = await fetch(`/api/gallery/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ label, caption }),
-      });
-      if (!res.ok) throw new Error('Failed to save');
+      try {
+        const res = await fetch(`/api/gallery/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ label, caption }),
+        });
+        if (!res.ok) throw new Error('Failed to save');
 
-      const card = document.querySelector<HTMLElement>(`.photo-card[data-id="${id}"]`);
-      if (card) {
-        const labelEl = card.querySelector<HTMLElement>('p.text-white.text-xs');
-        if (labelEl) { labelEl.textContent = label; labelEl.title = label; }
-        let captionEl = card.querySelector<HTMLElement>('p.text-slate-400.text-xs');
-        if (caption) {
-          if (!captionEl) {
-            captionEl = document.createElement('p');
-            captionEl.className = 'text-slate-400 text-xs truncate mt-0.5';
-            labelEl?.after(captionEl);
-          }
-          captionEl.textContent = caption;
-          captionEl.title = caption;
-        } else {
-          captionEl?.remove();
+        const row = document.querySelector<HTMLElement>(`.photo-row[data-id="${id}"]`);
+        if (row) {
+          const labelEl = row.querySelector('.photo-label');
+          const captionEl = row.querySelector('.photo-caption');
+          if (labelEl) labelEl.textContent = label;
+          if (captionEl) captionEl.textContent = caption || '—';
+          const editBtn = row.querySelector<HTMLButtonElement>('.btn-edit');
+          const deleteBtn = row.querySelector<HTMLButtonElement>('.btn-delete');
+          if (editBtn) { editBtn.dataset.label = label; editBtn.dataset.caption = caption; }
+          if (deleteBtn) deleteBtn.dataset.label = label;
         }
-        const editBtn = card.querySelector<HTMLButtonElement>('.btn-edit');
-        const deleteBtn = card.querySelector<HTMLButtonElement>('.btn-delete');
-        if (editBtn) { editBtn.dataset.label = label; editBtn.dataset.caption = caption; }
-        if (deleteBtn) deleteBtn.dataset.label = label;
+        closeEditModal();
+        showToast('Photo updated!');
+      } catch (err: any) {
+        showToast(err.message || 'Error saving.', true);
+      } finally {
+        editSave.disabled = false;
+        editSave.innerHTML = '<i class="fas fa-check mr-1.5"></i> Save Changes';
       }
+    });
+  }
 
-      closeEditModal();
-      showToast('Photo updated!');
-    } catch (err: any) {
-      showToast(err.message || 'Error saving.', true);
-    } finally {
-      editSave.disabled = false;
-      editSave.textContent = 'Save';
-    }
-  });
-
-  function attachEdit(btn: HTMLButtonElement) {
+  function attachEdit(btn: HTMLButtonElement | null) {
+    if (!btn) return;
     btn.addEventListener('click', () => {
       openEditModal(
-        btn.dataset.id!,
-        btn.dataset.label || '',
-        btn.dataset.caption || '',
-        btn.dataset.src || ''
+        btn.dataset.id ?? '',
+        btn.dataset.label ?? '',
+        btn.dataset.caption ?? '',
+        btn.dataset.src ?? ''
       );
     });
   }
 
-  // ── Delete ──────────────────────────────────────────────
-  function attachDelete(btn: HTMLButtonElement) {
+  // ── Delete ───────────────────────────────────────────
+  function attachDelete(btn: HTMLButtonElement | null) {
+    if (!btn) return;
     btn.addEventListener('click', async () => {
-      const id = btn.dataset.id!;
+      const id = btn.dataset.id ?? '';
       const label = btn.dataset.label || 'this photo';
-      if (!confirm(`Delete "${label}"?`)) return;
-      const res = await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        btn.closest('.photo-card')?.remove();
+      if (!confirm(`Delete "${label}"?\n\nThis cannot be undone.`)) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i>';
+
+      try {
+        const res = await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const row = btn.closest('.photo-row');
+        if (row) row.remove();
+        const remaining = countPhotos();
+        if (photoCountEl) photoCountEl.textContent = `${remaining} photo${remaining !== 1 ? 's' : ''} · displayed on the home page`;
+        if (remaining === 0) {
+          const emptyState = el('empty-state');
+          if (emptyState) emptyState.style.display = 'block';
+        }
         showToast('Photo deleted.');
-      } else {
-        showToast('Failed to delete photo.', true);
+      } catch (err: any) {
+        showToast(`Delete failed: ${err.message}`, true);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash text-xs"></i><span class="hidden sm:inline">Delete</span>';
       }
     });
   }
 
   document.querySelectorAll<HTMLButtonElement>('.btn-edit').forEach(attachEdit);
   document.querySelectorAll<HTMLButtonElement>('.btn-delete').forEach(attachDelete);
+})();
 </script>
