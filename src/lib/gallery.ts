@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fetchBlobJson, invalidateBlobCache, primeBlobCache } from './blob-cache';
 
 export interface GalleryPhoto {
   id: string;
@@ -39,12 +40,9 @@ function writeTmp(photos: GalleryPhoto[]): void {
 async function readPhotos(): Promise<GalleryPhoto[]> {
   if (HAS_BLOB) {
     try {
-      const { list } = await import('@vercel/blob');
-      const { blobs } = await list({ prefix: BLOB_KEY });
-      const meta = blobs.find(b => b.pathname === BLOB_KEY);
-      if (!meta) return readLocal();
-      const res = await fetch(meta.url, { cache: 'no-store' });
-      return await res.json();
+      const data = await fetchBlobJson<GalleryPhoto[]>(BLOB_KEY);
+      if (data) return data;
+      return readLocal();
     } catch {
       return IS_VERCEL ? readTmp() : readLocal();
     }
@@ -62,6 +60,7 @@ async function writePhotos(photos: GalleryPhoto[]): Promise<void> {
       addRandomSuffix: false,
       allowOverwrite: true,
     });
+    primeBlobCache(BLOB_KEY, photos);
     return;
   }
   if (IS_VERCEL) { writeTmp(photos); return; }
@@ -76,6 +75,7 @@ export async function addPhoto(photo: Omit<GalleryPhoto, 'id'>): Promise<Gallery
   const photos = await readPhotos();
   const newPhoto: GalleryPhoto = { id: `g${Date.now()}`, ...photo };
   photos.push(newPhoto);
+  invalidateBlobCache(BLOB_KEY);
   await writePhotos(photos);
   return newPhoto;
 }
@@ -88,6 +88,7 @@ export async function updatePhoto(
   const idx = photos.findIndex(p => p.id === id);
   if (idx === -1) return null;
   photos[idx] = { ...photos[idx], ...data };
+  invalidateBlobCache(BLOB_KEY);
   await writePhotos(photos);
   return photos[idx];
 }
@@ -96,6 +97,7 @@ export async function deletePhoto(id: string): Promise<boolean> {
   const photos = await readPhotos();
   const filtered = photos.filter(p => p.id !== id);
   if (filtered.length === photos.length) return false;
+  invalidateBlobCache(BLOB_KEY);
   await writePhotos(filtered);
   return true;
 }

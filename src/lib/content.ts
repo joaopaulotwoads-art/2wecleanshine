@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fetchBlobJson, invalidateBlobCache, primeBlobCache } from './blob-cache';
 
 const LOCAL_FILE = join(process.cwd(), 'src', 'data', 'site-content.json');
 const TMP_FILE = '/tmp/weclean-content.json';
@@ -32,12 +33,9 @@ function writeTmp(data: Record<string, any>): void {
 async function readContent(): Promise<Record<string, any>> {
   if (HAS_BLOB) {
     try {
-      const { list } = await import('@vercel/blob');
-      const { blobs } = await list({ prefix: BLOB_KEY });
-      const meta = blobs.find(b => b.pathname === BLOB_KEY);
-      if (!meta) return readLocal();
-      const res = await fetch(meta.url, { cache: 'no-store' });
-      return await res.json();
+      const data = await fetchBlobJson<Record<string, any>>(BLOB_KEY);
+      if (data) return data;
+      return readLocal();
     } catch {
       return IS_VERCEL ? readTmp() : readLocal();
     }
@@ -55,6 +53,7 @@ async function writeContent(data: Record<string, any>): Promise<void> {
       addRandomSuffix: false,
       allowOverwrite: true,
     });
+    primeBlobCache(BLOB_KEY, data);
     return;
   }
   if (IS_VERCEL) { writeTmp(data); return; }
@@ -68,6 +67,7 @@ export async function getContent(): Promise<Record<string, any>> {
 export async function updateContent(data: Record<string, any>): Promise<Record<string, any>> {
   const current = await readContent();
   const merged = { ...current, ...data };
+  invalidateBlobCache(BLOB_KEY);
   await writeContent(merged);
   return merged;
 }
