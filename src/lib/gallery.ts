@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fetchBlobJson, invalidateBlobCache, primeBlobCache } from './blob-cache';
+import { getGithubFile, putGithubFile } from './github';
 
 export interface GalleryPhoto {
   id: string;
@@ -10,11 +10,9 @@ export interface GalleryPhoto {
 }
 
 const LOCAL_FILE = join(process.cwd(), 'src', 'data', 'gallery.json');
-const TMP_FILE = '/tmp/weclean-gallery.json';
-const BLOB_KEY = 'gallery-data.json';
+const REPO_PATH = 'src/data/gallery.json';
 
-const IS_VERCEL = !!process.env.VERCEL;
-const HAS_BLOB = !!(process.env.VERCEL && process.env.BLOB_STORE_ID);
+const HAS_GITHUB = !!(process.env.VERCEL && process.env.GITHUB_TOKEN);
 
 function readLocal(): GalleryPhoto[] {
   try {
@@ -24,59 +22,32 @@ function readLocal(): GalleryPhoto[] {
   }
 }
 
-function readTmp(): GalleryPhoto[] {
-  try {
-    if (!existsSync(TMP_FILE)) copyFileSync(LOCAL_FILE, TMP_FILE);
-    return JSON.parse(readFileSync(TMP_FILE, 'utf-8'));
-  } catch {
-    return readLocal();
+async function readLatest(): Promise<{ photos: GalleryPhoto[]; sha?: string }> {
+  if (HAS_GITHUB) {
+    const file = await getGithubFile(REPO_PATH);
+    if (file) return { photos: JSON.parse(Buffer.from(file.content, 'base64').toString('utf-8')), sha: file.sha };
   }
+  return { photos: readLocal() };
 }
 
-function writeTmp(photos: GalleryPhoto[]): void {
-  writeFileSync(TMP_FILE, JSON.stringify(photos, null, 2));
-}
-
-async function readPhotos(): Promise<GalleryPhoto[]> {
-  if (HAS_BLOB) {
-    try {
-      const data = await fetchBlobJson<GalleryPhoto[]>(BLOB_KEY);
-      if (data) return data;
-      return readLocal();
-    } catch {
-      return IS_VERCEL ? readTmp() : readLocal();
-    }
-  }
-  if (IS_VERCEL) return readTmp();
-  return readLocal();
-}
-
-async function writePhotos(photos: GalleryPhoto[]): Promise<void> {
-  if (HAS_BLOB) {
-    const { put } = await import('@vercel/blob');
-    await put(BLOB_KEY, JSON.stringify(photos, null, 2), {
-      access: 'public',
-      contentType: 'application/json',
-      addRandomSuffix: false,
-      allowOverwrite: true,
-    });
-    primeBlobCache(BLOB_KEY, photos);
+async function writePhotos(photos: GalleryPhoto[], sha: string | undefined, message: string): Promise<void> {
+  if (HAS_GITHUB) {
+    const ok = await putGithubFile(REPO_PATH, Buffer.from(JSON.stringify(photos, null, 2)).toString('base64'), message, sha);
+    if (!ok) throw new Error('Failed to commit gallery to GitHub');
     return;
   }
-  if (IS_VERCEL) { writeTmp(photos); return; }
   writeFileSync(LOCAL_FILE, JSON.stringify(photos, null, 2));
 }
 
 export async function getPhotos(): Promise<GalleryPhoto[]> {
-  return readPhotos();
+  return readLocal();
 }
 
 export async function addPhoto(photo: Omit<GalleryPhoto, 'id'>): Promise<GalleryPhoto> {
-  const photos = await readPhotos();
+  const { photos, sha } = await readLatest();
   const newPhoto: GalleryPhoto = { id: `g${Date.now()}`, ...photo };
-  photos.push(newPhoto);
-  invalidateBlobCache(BLOB_KEY);
-  await writePhotos(photos);
+  const updated = [...photos, newPhoto];
+  await writePhotos(updated, sha, `Add gallery photo: ${photo.label}`);
   return newPhoto;
 }
 
@@ -84,20 +55,18 @@ export async function updatePhoto(
   id: string,
   data: Partial<Omit<GalleryPhoto, 'id'>>
 ): Promise<GalleryPhoto | null> {
-  const photos = await readPhotos();
+  const { photos, sha } = await readLatest();
   const idx = photos.findIndex(p => p.id === id);
   if (idx === -1) return null;
   photos[idx] = { ...photos[idx], ...data };
-  invalidateBlobCache(BLOB_KEY);
-  await writePhotos(photos);
+  await writePhotos(photos, sha, `Update gallery photo: ${photos[idx].label}`);
   return photos[idx];
 }
 
 export async function deletePhoto(id: string): Promise<boolean> {
-  const photos = await readPhotos();
+  const { photos, sha } = await readLatest();
   const filtered = photos.filter(p => p.id !== id);
   if (filtered.length === photos.length) return false;
-  invalidateBlobCache(BLOB_KEY);
-  await writePhotos(filtered);
+  await writePhotos(filtered, sha, `Delete gallery photo: ${id}`);
   return true;
 }

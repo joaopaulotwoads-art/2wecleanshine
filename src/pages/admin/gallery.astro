@@ -369,7 +369,7 @@ const photos = await getPhotos();
         if (inputLabel) inputLabel.value = '';
         if (inputCaption) inputCaption.value = '';
         if (photoCountEl) photoCountEl.textContent = `${count} photo${count !== 1 ? 's' : ''} · displayed on the home page`;
-        showToast('Photo added!');
+        showToast('Photo added! Live on the site in about a minute.');
       } catch (err: any) {
         showToast(err.message || 'Error adding photo.', true);
       } finally {
@@ -448,7 +448,7 @@ const photos = await getPhotos();
           if (deleteBtn) deleteBtn.dataset.label = label;
         }
         closeEditModal();
-        showToast('Photo updated!');
+        showToast('Photo updated! Live on the site in about a minute.');
       } catch (err: any) {
         showToast(err.message || 'Error saving.', true);
       } finally {
@@ -510,7 +510,7 @@ const photos = await getPhotos();
           const emptyState = el('empty-state');
           if (emptyState) emptyState.style.display = 'block';
         }
-        showToast('Photo deleted.');
+        showToast('Photo deleted. Live on the site in about a minute.');
       } catch (err: any) {
         showToast(`Delete failed: ${err.message}`, true);
         btn.disabled = false;

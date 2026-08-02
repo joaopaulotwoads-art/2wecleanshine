@@ -329,7 +329,7 @@ const services = content.services || [];
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('Save failed');
-        showStatus('Saved! Changes are live on the site.');
+        showStatus('Saved! Live on the site in about a minute (triggers a redeploy).');
       } catch {
         showStatus('Error saving. Please try again.', false);
       } finally {
